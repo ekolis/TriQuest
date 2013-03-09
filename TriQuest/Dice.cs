@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TriQuest
+{
+	/// <summary>
+	/// Randomization.
+	/// </summary>
+	public static class Dice
+	{
+		private static Random r = new Random();
+
+		/// <summary>
+		/// Returns a random integer within a range. Includes the max.
+		/// </summary>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <returns></returns>
+		public static int Range(int min, int max)
+		{
+			return r.Next(max - min + 1) + min;
+		}
+
+		/// <summary>
+		/// Returns a random double within a range. Does not include the max.
+		/// </summary>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <returns></returns>
+		public static double Range(double min, double max)
+		{
+			return r.NextDouble() * (max - min) + min;
+		}
+	}
+}
