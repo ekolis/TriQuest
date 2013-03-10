@@ -68,6 +68,7 @@
 			this.DoubleBuffered = true;
 			this.Name = "MainForm";
 			this.Text = "TriQuest";
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
 			this.Resize += new System.EventHandler(this.MainForm_Resize);
 			((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picMinimap)).EndInit();

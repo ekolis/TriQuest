@@ -156,5 +156,39 @@ namespace TriQuest
 		{
 			return x >= 0 && x < Width && y >= 0 && y < Height;
 		}
+
+		public void Move(Formation f, Direction dir)
+		{
+			// find formation
+			bool found = false;
+			int fx = -99, fy = -99;
+			for (var x = 0; x < Width; x++)
+			{
+				for (var y = 0; y < Height; y++)
+				{
+					if (Tiles[x, y].Formation == f)
+					{
+						fx = x;
+						fy = y;
+						found = true;
+						break;
+					}
+				}
+				if (found)
+					break;
+			}
+
+			if (CoordsInBounds(fx + dir.DeltaX, fy + dir.DeltaY))
+			{
+				// TODO - check for collisions (fighting)
+				Tiles[fx, fy].Formation = null;
+				Tiles[fx + dir.DeltaX, fy + dir.DeltaY].Formation = f;
+				if (f == Heroes)
+				{
+					HeroX = fx + dir.DeltaX;
+					HeroY = fy + dir.DeltaY;
+				}
+			}
+		}
 	}
 }

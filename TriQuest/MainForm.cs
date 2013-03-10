@@ -120,5 +120,28 @@ namespace TriQuest
 				}
 			}
 		}
+
+		private void MainForm_KeyDown(object sender, KeyEventArgs e)
+		{
+			var dir = Direction.FromKey(e.KeyCode);
+			if (dir != null)
+			{
+				if (ModifierKeys.HasFlag(Keys.Shift))
+				{
+					// shift-arrow moves without rotating (strafe move)
+					map.Move(map.Heroes, dir);
+				}
+				else
+				{
+					// just plain arrow attempts to rotate instead of move if not facing direction of movement
+					if (map.Heroes.Facing == dir)
+						map.Move(map.Heroes, dir);
+					else
+						map.Heroes.Facing = dir;
+				}
+				picMap.Invalidate();
+				picMinimap.Invalidate();
+			}
+		}
 	}
 }
