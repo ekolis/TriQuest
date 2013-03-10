@@ -34,5 +34,16 @@ namespace TriQuest
 		{
 			return r.NextDouble() * (max - min) + min;
 		}
+
+		/// <summary>
+		/// Picks a random item from a list.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="items"></param>
+		/// <returns></returns>
+		public static T Pick<T>(this IEnumerable<T> items)
+		{
+			return items.ElementAt(Range(0, items.Count() - 1));
+		}
 	}
 }

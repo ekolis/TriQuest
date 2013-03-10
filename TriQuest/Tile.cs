@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace TriQuest
 {
@@ -20,5 +21,30 @@ namespace TriQuest
 		/// The terrain of this tile.
 		/// </summary>
 		public Terrain Terrain { get; set; }
+
+		/// <summary>
+		/// The formation (if any) that is located here.
+		/// </summary>
+		public Formation Formation { get; set; }
+
+		public char Symbol
+		{
+			get
+			{
+				if (Formation != null)
+					return Formation.Symbol;
+				return Terrain.Symbol;
+			}
+		}
+
+		public Color Color
+		{
+			get
+			{
+				if (Formation != null)
+					return Formation.Color;
+				return Terrain.Color;
+			}
+		}
 	}
 }

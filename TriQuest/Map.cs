@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace TriQuest
 {
@@ -16,6 +17,7 @@ namespace TriQuest
 			Width = width;
 			Height = height;
 			GenerateTerrain();
+			PlaceHeroes();
 		}
 
 		public const int MaxDangerLevel = 10;
@@ -27,6 +29,8 @@ namespace TriQuest
 		public int Height { get; private set; }
 
 		public Tile[,] Tiles { get; private set; }
+
+		public Formation Heroes { get; private set; }
 
 		private void GenerateTerrain()
 		{
@@ -78,6 +82,51 @@ namespace TriQuest
 						Tiles[x - dx, y - dy].DangerLevel = Math.Max(danger - dx / dangerGradientSize - dy / dangerGradientSize, Tiles[x - dx, y - dy].DangerLevel);
 				}
 			}
+		}
+
+		private void PlaceHeroes()
+		{
+			var warrior = new Creature
+			{
+				Attack = 7,
+				Defense = 6,
+				Mind = 1,
+				Body = 6,
+				Speed = 5,
+				Symbol = '@',
+				Color = Color.Red,
+				Level = 1,
+			};
+			var mage = new Creature
+			{
+				Attack = 6,
+				Defense = 2,
+				Mind = 10,
+				Body = 2,
+				Speed = 5,
+				Symbol = '@',
+				Color = Color.Blue,
+				Level = 1,
+			};
+			var priest = new Creature
+			{
+				Attack = 5,
+				Defense = 4,
+				Mind = 7,
+				Body = 4,
+				Speed = 5,
+				Symbol = '@',
+				Color = Color.Green,
+				Level = 1,
+			};
+
+			Heroes = new Formation();
+			Heroes.CreaturePositions[RelativePosition.Front] = warrior;
+			Heroes.CreaturePositions[RelativePosition.RearLeft] = mage;
+			Heroes.CreaturePositions[RelativePosition.RearRight] = priest;
+
+			var lowDanger = Tiles.Cast<Tile>().Where(t => t.DangerLevel == 1);
+			lowDanger.Pick().Formation = Heroes;
 		}
 
 		private bool CoordsInBounds(int x, int y)

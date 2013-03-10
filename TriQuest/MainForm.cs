@@ -12,17 +12,13 @@ namespace TriQuest
 {
 	public partial class MainForm : Form
 	{
-		public MainForm()
+		public MainForm(Map map)
 		{
 			InitializeComponent();
+			this.map = map;
 		}
 
 		private Map map;
-
-		private void MainForm_Load(object sender, EventArgs e)
-		{
-			map = new Map(100, 100);
-		}
 
 		private void picMap_Paint(object sender, PaintEventArgs e)
 		{
@@ -42,7 +38,7 @@ namespace TriQuest
 
 		private void DrawTile(Tile tile, Graphics g, int charSize, int x, int y)
 		{
-			g.DrawString(tile.Terrain.Symbol.ToString(), new Font("Sans Serif", charSize), new SolidBrush(tile.Terrain.Color), new PointF(x, y));
+			g.DrawString(tile.Symbol.ToString(), new Font("Lucida Console", charSize), new SolidBrush(tile.Color), new PointF(x, y));
 		}
 	}
 }

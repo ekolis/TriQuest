@@ -51,7 +51,6 @@
 			this.Controls.Add(this.picMap);
 			this.Name = "MainForm";
 			this.Text = "TriQuest";
-			this.Load += new System.EventHandler(this.MainForm_Load);
 			((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
 			this.ResumeLayout(false);
 
