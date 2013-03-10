@@ -31,6 +31,8 @@ namespace TriQuest
 		public Tile[,] Tiles { get; private set; }
 
 		public Formation Heroes { get; private set; }
+		public int HeroX { get; private set; }
+		public int HeroY { get; private set; }
 
 		private void GenerateTerrain()
 		{
@@ -67,7 +69,7 @@ namespace TriQuest
 		{
 			var dangerGradientSize = (int)(Math.Sqrt(Width * Height) / DangerHotspotTightness);
 			if (CoordsInBounds(x, y))
-				Tiles[x, y].DangerLevel = Math.Max(danger, Tiles[x,y].DangerLevel);
+				Tiles[x, y].DangerLevel = Math.Max(danger, Tiles[x, y].DangerLevel);
 			for (int dx = 0; dx < danger * dangerGradientSize; dx++)
 			{
 				for (int dy = 0; dy < danger * dangerGradientSize; dy++)
@@ -96,6 +98,7 @@ namespace TriQuest
 				Symbol = '@',
 				Color = Color.Red,
 				Level = 1,
+				Sight = 5,
 			};
 			var mage = new Creature
 			{
@@ -107,6 +110,7 @@ namespace TriQuest
 				Symbol = '@',
 				Color = Color.Blue,
 				Level = 1,
+				Sight = 5,
 			};
 			var priest = new Creature
 			{
@@ -118,6 +122,7 @@ namespace TriQuest
 				Symbol = '@',
 				Color = Color.Green,
 				Level = 1,
+				Sight = 5,
 			};
 
 			Heroes = new Formation();
@@ -127,6 +132,22 @@ namespace TriQuest
 
 			var lowDanger = Tiles.Cast<Tile>().Where(t => t.DangerLevel == 1);
 			lowDanger.Pick().Formation = Heroes;
+			bool foundHeroes = false;
+			for (var x = 0; x < Width; x++)
+			{
+				for (var y = 0; y < Height; y++)
+				{
+					if (Tiles[x, y].Formation == Heroes)
+					{
+						HeroX = x;
+						HeroY = y;
+						foundHeroes = true;
+						break;
+					}
+				}
+				if (foundHeroes)
+					break;
+			}
 		}
 
 		private bool CoordsInBounds(int x, int y)

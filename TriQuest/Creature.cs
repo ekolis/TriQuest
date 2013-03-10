@@ -52,5 +52,11 @@ namespace TriQuest
 		/// The experience (for heroes) or danger (for monsters) level of this creature.
 		/// </summary>
 		public int Level { get; set; }
+
+		/// <summary>
+		/// How many tiles can this creature see?
+		/// A formation's sight is the maximum of its creatures' sight.
+		/// </summary>
+		public int Sight { get; set; }
 	}
 }

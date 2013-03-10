@@ -46,5 +46,25 @@ namespace TriQuest
 				return Terrain.Color;
 			}
 		}
+
+		public char GetSymbol(AbsolutePosition pos)
+		{
+			if (Formation == null)
+				return Terrain.Symbol;
+			var creature = Formation.GetCreature(pos);
+			if (creature == null)
+				return Terrain.Symbol;
+			return creature.Symbol;
+		}
+
+		public Color GetColor(AbsolutePosition pos)
+		{
+			if (Formation == null)
+				return Terrain.Color;
+			var creature = Formation.GetCreature(pos);
+			if (creature == null)
+				return Terrain.Color;
+			return creature.Color;
+		}
 	}
 }

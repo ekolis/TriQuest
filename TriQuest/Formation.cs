@@ -80,5 +80,17 @@ namespace TriQuest
 				return maxes.First().Value;
 			}
 		}
+
+		public Creature GetCreature(RelativePosition pos)
+		{
+			if (CreaturePositions.ContainsKey(pos))
+				return CreaturePositions[pos];
+			return null;
+		}
+
+		public Creature GetCreature(AbsolutePosition pos)
+		{
+			return GetCreature(pos.RelativeTo(Facing));
+		}
 	}
 }

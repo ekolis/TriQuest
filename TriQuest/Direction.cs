@@ -37,6 +37,8 @@ namespace TriQuest
 		public static readonly Direction East = new Direction(1, 0, System.Windows.Forms.Keys.Right, System.Windows.Forms.Keys.NumPad6);
 		public static readonly Direction West = new Direction(-1, 0, System.Windows.Forms.Keys.Left, System.Windows.Forms.Keys.NumPad4);
 
+		public static readonly IEnumerable<Direction> All = new Direction[] { North, South, East, West };
+
 		/// <summary>
 		/// Gets the direction associated with a key press.
 		/// </summary>
@@ -44,7 +46,7 @@ namespace TriQuest
 		/// <returns></returns>
 		public static Direction FromKey(Keys key)
 		{
-			foreach (var dir in new Direction[] { North, South, East, West })
+			foreach (var dir in All)
 			{
 				if (dir.Keys.Contains(key))
 					return dir;

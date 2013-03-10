@@ -49,8 +49,10 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(784, 561);
 			this.Controls.Add(this.picMap);
+			this.DoubleBuffered = true;
 			this.Name = "MainForm";
 			this.Text = "TriQuest";
+			this.Resize += new System.EventHandler(this.MainForm_Resize);
 			((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
 			this.ResumeLayout(false);
 
