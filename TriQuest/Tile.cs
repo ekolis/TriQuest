@@ -66,5 +66,14 @@ namespace TriQuest
 				return Terrain.Color;
 			return creature.Color;
 		}
+
+		/// <summary>
+		/// Have the heroes seen this tile yet?
+		/// </summary>
+		public bool HasBeenSeen
+		{
+			get;
+			set;
+		}
 	}
 }

@@ -20,8 +20,6 @@ namespace TriQuest
 		}
 
 		private Map map;
-		private static int charSize = 8;
-		private static Font font = new Font("Lucida Console", charSize);
 		private static Dictionary<Color, SolidBrush> brushes = new Dictionary<Color, SolidBrush>();
 
 		private void picMap_Paint(object sender, PaintEventArgs e)
@@ -30,46 +28,62 @@ namespace TriQuest
 				return;
 
 			var g = e.Graphics;
-			int charSize = 8;
 			int subTiles = 3;
 			int border = 1;
+			var xsize = picMap.Width / (subTiles + border * 2) / (map.Heroes.Sight * 2 + 1);
+			var ysize = picMap.Height / (subTiles + border * 2) / (map.Heroes.Sight * 2 + 1);
+			int charSize = Math.Min(xsize, ysize);
+			var font = new Font("Lucida Console", charSize);
 
 			// center on heroes
-			var dx = -map.HeroX * charSize * (subTiles + border * 2) + picMap.Width / 2;
-			var dy = -map.HeroY * charSize * (subTiles + border * 2) + picMap.Height / 2;
+			var dx = -map.HeroX * charSize * (subTiles + border * 2) + picMap.Width / 2 - (charSize * subTiles + border * 2) / 2;
+			var dy = -map.HeroY * charSize * (subTiles + border * 2) + picMap.Height / 2 - (charSize * subTiles + border * 2) / 2;
 
 			g.Clear(picMap.BackColor);
 			for (int x = 0; x < map.Width; x++)
 			{
 				for (int y = 0; y < map.Height; y++)
 				{
-					DrawTile(map.Tiles[x, y], g, border, dx + x * charSize * (subTiles + border * 2), dy + y * charSize * (subTiles + border * 2));
+					if (Math.Abs(map.HeroX - x) + Math.Abs(map.HeroY - y) <= map.Heroes.Sight)
+						DrawTileFull(map.Tiles[x, y], g, font, border, dx + x * charSize * (subTiles + border * 2), dy + y * charSize * (subTiles + border * 2));
 				}
 			}
 		}
 
-		private void DrawTile(Tile tile, Graphics g, int border, int x, int y)
+		private void DrawTileFull(Tile tile, Graphics g, Font font, int border, int x, int y)
 		{
 			foreach (var pos in AbsolutePosition.All)
-				DrawSubtile(tile, g, border, x, y, pos);
+				DrawSubtile(tile, g, font, border, x, y, pos);
+			var charSize = font.Size;
 			if (tile.Formation != null)
 			{
 				// draw facing arrows
 				int subTiles = 3;
 				var facing = tile.Formation.Facing;
 				if (facing == Direction.North)
-					g.DrawString("^", font, GetBrush(Color.White), new PointF(x + charSize * subTiles / 2, y));
+					g.DrawString("^", font, GetBrush(Color.White), new PointF(x + charSize * subTiles / 2 + 0.5f * charSize, y));
 				else if (facing == Direction.South)
-					g.DrawString("v", font, GetBrush(Color.White), new PointF(x + charSize * subTiles / 2, y + charSize * (border + subTiles)));
+					g.DrawString("v", font, GetBrush(Color.White), new PointF(x + charSize * subTiles / 2 + 0.5f * charSize, y + charSize * (border + subTiles)));
 				else if (facing == Direction.East)
-					g.DrawString(">", font, GetBrush(Color.White), new PointF(x + charSize * (border + subTiles), y + charSize * subTiles / 2));
+					g.DrawString(">", font, GetBrush(Color.White), new PointF(x + charSize * (border + subTiles), y + charSize * subTiles / 2 + 0.5f * charSize));
 				else if (facing == Direction.West)
-					g.DrawString("<", font, GetBrush(Color.White), new PointF(x, y + charSize * subTiles / 2));
+					g.DrawString("<", font, GetBrush(Color.White), new PointF(x, y + charSize * subTiles / 2 + 0.5f * charSize));
 			}
 		}
 
-		private void DrawSubtile(Tile tile, Graphics g, int border, int x, int y, AbsolutePosition pos)
+		private void DrawTileSimple(Tile tile, Graphics g, Font font, int x, int y)
 		{
+			g.DrawString(tile.Symbol.ToString(), font, GetBrush(tile.Color), new PointF(x, y));
+		}
+
+		private void DrawTileSimpleFogged(Tile tile, Graphics g, Font font, int x, int y)
+		{
+			g.DrawString(tile.Terrain.Symbol.ToString(), font, GetBrush(tile.Terrain.Color), new PointF(x, y));
+		}
+
+		private void DrawSubtile(Tile tile, Graphics g, Font font, int border, int x, int y, AbsolutePosition pos)
+		{
+			var charSize = font.Size;
 			g.DrawString(tile.GetSymbol(pos).ToString(), font, GetBrush(tile.GetColor(pos)), new PointF(x + charSize * (pos.Column + border), y + charSize * (pos.Row + border)));
 		}
 
@@ -83,6 +97,28 @@ namespace TriQuest
 		private void MainForm_Resize(object sender, EventArgs e)
 		{
 			picMap.Invalidate();
+		}
+
+		private void picMinimap_Paint(object sender, PaintEventArgs e)
+		{
+			if (map == null)
+				return;
+
+			var g = e.Graphics;
+			int charSize = Math.Min(picMinimap.Width / map.Width, picMinimap.Height / map.Height);
+			var font = new Font("Lucida Console", charSize);
+
+			g.Clear(picMinimap.BackColor);
+			for (int x = 0; x < map.Width; x++)
+			{
+				for (int y = 0; y < map.Height; y++)
+				{
+					if (Math.Abs(map.HeroX - x) + Math.Abs(map.HeroY - y) <= map.Heroes.Sight)
+						DrawTileSimple(map.Tiles[x, y], g, font, x * charSize, y * charSize);
+					else if (map.Tiles[x,y].HasBeenSeen)
+						DrawTileSimpleFogged(map.Tiles[x, y], g, font, x * charSize, y * charSize);
+				}
+			}
 		}
 	}
 }

@@ -148,6 +148,8 @@ namespace TriQuest
 				if (foundHeroes)
 					break;
 			}
+
+			// TODO - update fog of war
 		}
 
 		private bool CoordsInBounds(int x, int y)

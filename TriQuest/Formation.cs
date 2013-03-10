@@ -92,5 +92,13 @@ namespace TriQuest
 		{
 			return GetCreature(pos.RelativeTo(Facing));
 		}
+
+		public int Sight
+		{
+			get
+			{
+				return CreaturePositions.Values.Max(c => c.Sight);
+			}
+		}
 	}
 }
