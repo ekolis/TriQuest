@@ -64,31 +64,31 @@ namespace TriQuest
 
 	public class AbsolutePosition : IPosition
 	{
-		private AbsolutePosition(string name, int column, int row, Keys key)
+		private AbsolutePosition(string name, int column, int row, params Keys[] keys)
 		{
 			Name = name;
 			Column = column;
 			Row = row;
-			Key = key;
+			Keys = keys;
 		}
 
 		public string Name { get; private set; }
 		public int Column { get; private set; }
 		public int Row { get; private set; }
 		/// <summary>
-		/// The keypad key associated with this position.
+		/// The keypad keys associated with this position.
 		/// </summary>
-		public Keys Key { get; private set; }
+		public IEnumerable<Keys> Keys { get; private set; }
 
-		public static readonly AbsolutePosition Northwest = new AbsolutePosition("northwest", 0, 0, Keys.NumPad7);
-		public static readonly AbsolutePosition North = new AbsolutePosition("north", 1, 0, Keys.NumPad8);
-		public static readonly AbsolutePosition Northeast = new AbsolutePosition("northeast", 2, 0, Keys.NumPad9);
-		public static readonly AbsolutePosition West = new AbsolutePosition("west", 0, 1, Keys.NumPad4);
-		public static readonly AbsolutePosition Center = new AbsolutePosition("center", 1, 1, Keys.NumPad5);
-		public static readonly AbsolutePosition East = new AbsolutePosition("east", 2, 1, Keys.NumPad6);
-		public static readonly AbsolutePosition Southwest = new AbsolutePosition("southwest", 0, 2, Keys.NumPad1);
-		public static readonly AbsolutePosition South = new AbsolutePosition("south", 1, 2, Keys.NumPad2);
-		public static readonly AbsolutePosition Southeast = new AbsolutePosition("southeast", 2, 2, Keys.NumPad3);
+		public static readonly AbsolutePosition Northwest = new AbsolutePosition("northwest", 0, 0, System.Windows.Forms.Keys.NumPad7, System.Windows.Forms.Keys.D7, System.Windows.Forms.Keys.Home);
+		public static readonly AbsolutePosition North = new AbsolutePosition("north", 1, 0, System.Windows.Forms.Keys.NumPad8, System.Windows.Forms.Keys.D8, System.Windows.Forms.Keys.Up);
+		public static readonly AbsolutePosition Northeast = new AbsolutePosition("northeast", 2, 0, System.Windows.Forms.Keys.NumPad9, System.Windows.Forms.Keys.D9, System.Windows.Forms.Keys.PageUp);
+		public static readonly AbsolutePosition West = new AbsolutePosition("west", 0, 1, System.Windows.Forms.Keys.NumPad4, System.Windows.Forms.Keys.D4, System.Windows.Forms.Keys.Left);
+		public static readonly AbsolutePosition Center = new AbsolutePosition("center", 1, 1, System.Windows.Forms.Keys.NumPad5,  System.Windows.Forms.Keys.D5, System.Windows.Forms.Keys.Clear);
+		public static readonly AbsolutePosition East = new AbsolutePosition("east", 2, 1, System.Windows.Forms.Keys.NumPad6, System.Windows.Forms.Keys.D6, System.Windows.Forms.Keys.Right);
+		public static readonly AbsolutePosition Southwest = new AbsolutePosition("southwest", 0, 2, System.Windows.Forms.Keys.NumPad1, System.Windows.Forms.Keys.D1, System.Windows.Forms.Keys.End);
+		public static readonly AbsolutePosition South = new AbsolutePosition("south", 1, 2, System.Windows.Forms.Keys.NumPad2, System.Windows.Forms.Keys.D2, System.Windows.Forms.Keys.Down);
+		public static readonly AbsolutePosition Southeast = new AbsolutePosition("southeast", 2, 2, System.Windows.Forms.Keys.NumPad3, System.Windows.Forms.Keys.D3, System.Windows.Forms.Keys.PageDown);
 
 		public static readonly IEnumerable<AbsolutePosition> All = new AbsolutePosition[]
 		{
@@ -104,7 +104,7 @@ namespace TriQuest
 		{
 			foreach (var pos in All)
 			{
-				if (pos.Key == key)
+				if (pos.Keys.Contains(key))
 					return pos;
 			}
 			return null;

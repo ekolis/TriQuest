@@ -121,30 +121,109 @@ namespace TriQuest
 			}
 		}
 
+		private int heroBeingPlaced = -1;
+		private Dictionary<AbsolutePosition, Creature> newHeroPositions;
+		private bool heroesDead = false;
+
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			var dir = Direction.FromKey(e.KeyCode);
-			if (dir != null)
+			if (heroesDead)
+				return; // no doing stuff when you're dead!
+
+			if (heroBeingPlaced >= 0)
 			{
-				if (ModifierKeys.HasFlag(Keys.Shift))
+				if (e.KeyCode == Keys.F)
 				{
-					// shift-arrow moves without rotating (strafe move)
-					map.Move(map.Heroes, dir);
+					heroBeingPlaced = -1; // cancel
+					Log.Append("Never mind, then.");
 				}
 				else
 				{
-					// just plain arrow attempts to rotate instead of move if not facing direction of movement
-					map.MoveOrTurn(map.Heroes, dir);
+
+					// place the hero
+					var pos = AbsolutePosition.FromKey(e.KeyCode);
+					if (pos == null)
+						Log.Append("Use the numeric keypad to place the " + map.Heroes.CreaturePositions.Values.ElementAt(heroBeingPlaced).Name + " or press F to cancel.");
+					else
+					{
+						if (newHeroPositions.Keys.Contains(pos))
+							Log.Append("The " + newHeroPositions[pos].Name + " is already in the " + pos.Name + ". Try again or press F to cancel.");
+						else
+						{
+							// set placement
+							newHeroPositions[pos] = map.Heroes.CreaturePositions.Values.ElementAt(heroBeingPlaced);
+
+							// move on to next hero, or be done if last hero was placed
+							heroBeingPlaced++;
+							if (heroBeingPlaced >= map.Heroes.CreaturePositions.Values.Count)
+							{
+								map.Heroes.CreaturePositions.Clear();
+								foreach (var kvp in newHeroPositions)
+									map.Heroes.CreaturePositions.Add(kvp.Key.RelativeTo(map.Heroes.Facing), kvp.Value);
+								heroBeingPlaced = -1;
+								Log.Append("The heroes rearrange their formation.");
+								map.Heroes.Act(map.Tiles[map.HeroX, map.HeroY].Terrain.MovementCost);
+								map.LetMonstersAct();
+							}
+							else
+								Log.Append("Please choose a position for the " + map.Heroes.CreaturePositions.Values.ElementAt(heroBeingPlaced).Name + ".");
+						}
+					}
 				}
-				map.LetMonstersAct();
-				if (!map.CoordsInBounds(map.HeroX, map.HeroY))
-				{
-					MessageBox.Show("Oh no! The heroes have fallen...");
-					Application.Exit();
-				}
-				picMap.Invalidate();
-				picMinimap.Invalidate();
 			}
+			else
+			{
+				if (e.KeyCode == Keys.F)
+				{
+					// F: set formation
+					heroBeingPlaced = 0;
+					newHeroPositions = new Dictionary<AbsolutePosition, Creature>();
+					Log.Append("Please choose a position for the " + map.Heroes.CreaturePositions.Values.ElementAt(heroBeingPlaced).Name + ".");
+				}
+				else
+				{
+					var dir = Direction.FromKey(e.KeyCode);
+					if (dir != null)
+					{
+						// movement
+						if (ModifierKeys.HasFlag(Keys.Shift))
+						{
+							// shift-arrow moves without rotating (strafe move)
+							map.Move(map.Heroes, dir);
+						}
+						else
+						{
+							// just plain arrow attempts to rotate instead of move if not facing direction of movement
+							map.MoveOrTurn(map.Heroes, dir);
+						}
+						map.LetMonstersAct();
+						if (!map.CoordsInBounds(map.HeroX, map.HeroY))
+						{
+							heroesDead = true;
+							Log.Append("Oh no! The heroes have fallen...", Color.Red);
+						}
+					}
+				}
+			}
+			picMap.Invalidate();
+			picMinimap.Invalidate();
+			RefreshLog();
+		}
+
+		private void RefreshLog()
+		{
+			var entries = Log.UnreadEntries.ToArray().Reverse().Take(10).Reverse().ToArray();
+			tblLog.Controls.Clear();
+			for (var i = 0; i < entries.Count(); i++)
+			{
+				var lbl = new Label();
+				tblLog.Controls.Add(lbl);
+				tblLog.SetRow(lbl, i);
+				lbl.Dock = DockStyle.Fill;
+				lbl.Text = entries[i].Message;
+				lbl.ForeColor = entries[i].Color;
+			}
+			Log.MarkAllRead();
 		}
 	}
 }

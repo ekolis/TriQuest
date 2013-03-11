@@ -30,6 +30,7 @@
 		{
 			this.picMap = new System.Windows.Forms.PictureBox();
 			this.picMinimap = new System.Windows.Forms.PictureBox();
+			this.tblLog = new System.Windows.Forms.TableLayoutPanel();
 			((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picMinimap)).BeginInit();
 			this.SuspendLayout();
@@ -40,29 +41,54 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.picMap.BackColor = System.Drawing.Color.Black;
-			this.picMap.Location = new System.Drawing.Point(12, 12);
+			this.picMap.Location = new System.Drawing.Point(12, 180);
 			this.picMap.Name = "picMap";
-			this.picMap.Size = new System.Drawing.Size(454, 537);
+			this.picMap.Size = new System.Drawing.Size(454, 369);
 			this.picMap.TabIndex = 0;
 			this.picMap.TabStop = false;
 			this.picMap.Paint += new System.Windows.Forms.PaintEventHandler(this.picMap_Paint);
 			// 
 			// picMinimap
 			// 
-			this.picMinimap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.picMinimap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.picMinimap.BackColor = System.Drawing.Color.Black;
-			this.picMinimap.Location = new System.Drawing.Point(472, 12);
+			this.picMinimap.Location = new System.Drawing.Point(472, 249);
 			this.picMinimap.Name = "picMinimap";
 			this.picMinimap.Size = new System.Drawing.Size(300, 300);
 			this.picMinimap.TabIndex = 1;
 			this.picMinimap.TabStop = false;
 			this.picMinimap.Paint += new System.Windows.Forms.PaintEventHandler(this.picMinimap_Paint);
 			// 
+			// tblLog
+			// 
+			this.tblLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tblLog.BackColor = System.Drawing.Color.Black;
+			this.tblLog.ColumnCount = 1;
+			this.tblLog.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tblLog.ForeColor = System.Drawing.Color.White;
+			this.tblLog.Location = new System.Drawing.Point(12, 12);
+			this.tblLog.Name = "tblLog";
+			this.tblLog.RowCount = 10;
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+			this.tblLog.Size = new System.Drawing.Size(760, 162);
+			this.tblLog.TabIndex = 3;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(784, 561);
+			this.Controls.Add(this.tblLog);
 			this.Controls.Add(this.picMinimap);
 			this.Controls.Add(this.picMap);
 			this.DoubleBuffered = true;
@@ -80,6 +106,7 @@
 
 		private System.Windows.Forms.PictureBox picMap;
 		private System.Windows.Forms.PictureBox picMinimap;
+		private System.Windows.Forms.TableLayoutPanel tblLog;
 	}
 }
 

@@ -248,6 +248,8 @@ namespace TriQuest
 		/// <returns></returns>
 		public bool TestLineOfSight(int sourceX, int sourceY, int destX, int destY)
 		{
+			if (!CoordsInBounds(sourceX, sourceY) || !CoordsInBounds(destX, destY))
+				return false;
 			var f = Tiles[sourceX, sourceY].Formation;
 			if (f == null)
 				return false;
