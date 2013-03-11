@@ -44,7 +44,7 @@ namespace TriQuest
 			{
 				for (int y = 0; y < map.Height; y++)
 				{
-					if (Math.Abs(map.HeroX - x) + Math.Abs(map.HeroY - y) <= map.Heroes.Sight)
+					if (map.TestLineOfSight(map.HeroX, map.HeroY, x, y))
 						DrawTileFull(map.Tiles[x, y], g, font, border, dx + x * charSize * (subTiles + border * 2), dy + y * charSize * (subTiles + border * 2));
 				}
 			}
@@ -113,7 +113,7 @@ namespace TriQuest
 			{
 				for (int y = 0; y < map.Height; y++)
 				{
-					if (Math.Abs(map.HeroX - x) + Math.Abs(map.HeroY - y) <= map.Heroes.Sight)
+					if (map.TestLineOfSight(map.HeroX, map.HeroY, x, y))
 						DrawTileSimple(map.Tiles[x, y], g, font, x * charSize, y * charSize);
 					else if (map.Tiles[x,y].HasBeenSeen)
 						DrawTileSimpleFogged(map.Tiles[x, y], g, font, x * charSize, y * charSize);
@@ -134,10 +134,13 @@ namespace TriQuest
 				else
 				{
 					// just plain arrow attempts to rotate instead of move if not facing direction of movement
-					if (map.Heroes.Facing == dir)
-						map.Move(map.Heroes, dir);
-					else
-						map.Heroes.Facing = dir;
+					map.MoveOrTurn(map.Heroes, dir);
+				}
+				map.LetMonstersAct();
+				if (!map.CoordsInBounds(map.HeroX, map.HeroY))
+				{
+					MessageBox.Show("Oh no! The heroes have fallen...");
+					Application.Exit();
 				}
 				picMap.Invalidate();
 				picMinimap.Invalidate();

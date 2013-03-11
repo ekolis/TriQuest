@@ -10,8 +10,13 @@ namespace TriQuest
 	/// <summary>
 	/// A hero or a monster.
 	/// </summary>
-	public class Creature
+	public class Creature : ICloneable<Creature>
 	{
+		/// <summary>
+		/// Creature's name.
+		/// </summary>
+		public string Name { get; set; }
+
 		/// <summary>
 		/// Creature's attack power with physical and magical attacks.
 		/// </summary>
@@ -58,5 +63,39 @@ namespace TriQuest
 		/// A formation's sight is the maximum of its creatures' sight.
 		/// </summary>
 		public int Sight { get; set; }
+
+		/// <summary>
+		/// The delay before this creature can act again.
+		/// </summary>
+		public double Delay { get; set; }
+
+		public Creature Clone()
+		{
+			var c = new Creature();
+			c.Attack = Attack;
+			c.Body = Body;
+			c.Color = Color;
+			c.Defense = Defense;
+			c.Level = Level;
+			c.Mind = Mind;
+			c.Sight = Sight;
+			c.Speed = Speed;
+			c.Symbol = Symbol;
+			return c;
+		}
+
+		object ICloneable.Clone()
+		{
+			return Clone();
+		}
+
+		/// <summary>
+		/// Spends time on an action, incrementing the creature's delay counter in inverse proprtion to its speed.
+		/// </summary>
+		/// <param name="actionCost"></param>
+		public void Act(double actionCost)
+		{
+			Delay += actionCost / Speed;
+		}
 	}
 }

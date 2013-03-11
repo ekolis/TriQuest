@@ -18,6 +18,40 @@ namespace TriQuest
 			Facing = Direction.North;
 		}
 
+		public static Formation SpawnMonsters(int dangerLevel)
+		{
+			var f = new Formation();
+
+			// final boss is special
+			if (dangerLevel == Map.MaxDangerLevel)
+			{
+				foreach (var pos in RelativePosition.All)
+				{
+					if (pos == RelativePosition.Center)
+						f.CreaturePositions[pos] = MonsterTemplate.ChaosLord.Archetype.Clone();
+					else
+						f.CreaturePositions[pos] = MonsterTemplate.ChaosDisciple.Archetype.Clone();
+				}
+			}
+			else
+			{
+				do
+				{
+					foreach (var pos in RelativePosition.All)
+					{
+						if (Dice.Range(0, 2) == 0)
+						{
+							f.CreaturePositions[pos] = MonsterTemplate.Spawn(dangerLevel);
+						}
+					}
+				} while (!f.CreaturePositions.Any()); // don't allow zero creature formations!
+			}
+
+			f.Facing = Direction.All.Pick();
+			return f;
+
+		}
+
 		/// <summary>
 		/// The positions of the creatures in this formation.
 		/// </summary>
@@ -99,6 +133,41 @@ namespace TriQuest
 			{
 				return CreaturePositions.Values.Max(c => c.Sight);
 			}
+		}
+
+		/// <summary>
+		/// Spends time on an action, incrementing creatures' delay counters in inverse proprtion to their speed.
+		/// </summary>
+		/// <param name="actionCost"></param>
+		public void Act(double actionCost)
+		{
+			foreach (var c in CreaturePositions.Values)
+				c.Act(actionCost);
+		}
+
+		public double Delay
+		{
+			get { return CreaturePositions.Values.Max(c => c.Delay); }
+		}
+
+		/// <summary>
+		/// Elapses time, allowing more actions.
+		/// </summary>
+		/// <param name="time"></param>
+		public void ElapseTime(double time)
+		{
+			foreach (var c in CreaturePositions.Values)
+				c.Delay -= time;
+		}
+
+		/// <summary>
+		/// Passes the turn.
+		/// </summary>
+		/// <param name="time"></param>
+		public void Pass()
+		{
+			foreach (var c in CreaturePositions.Values)
+				c.Delay = double.Epsilon;
 		}
 	}
 }
