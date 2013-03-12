@@ -135,7 +135,7 @@ namespace TriQuest
 				Color = Color.Green,
 				Level = 1,
 				Sight = 5,
-				PhysicalAttackText = "bashes",
+				PhysicalAttackText = "smites",
 				MentalAttackText = "casts Cause Wounds at",
 			};
 
