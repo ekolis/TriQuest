@@ -45,5 +45,19 @@ namespace TriQuest
 		{
 			return items.ElementAt(Range(0, items.Count() - 1));
 		}
+
+		/// <summary>
+		/// Rolls multiple dice with the same number of sides.
+		/// </summary>
+		/// <param name="dice"></param>
+		/// <param name="sides"></param>
+		/// <returns></returns>
+		public static int Roll(int dice, int sides)
+		{
+			int result = 0;
+			for (var i = 0; i < dice; i++)
+				result += Range(1, sides);
+			return result;
+		}
 	}
 }

@@ -105,6 +105,8 @@ namespace TriQuest
 				Color = Color.Red,
 				Level = 1,
 				Sight = 5,
+				PhysicalAttackText = "slashes",
+				MentalAttackText = "ki-blasts",
 			};
 			var mage = new Creature
 			{
@@ -118,6 +120,8 @@ namespace TriQuest
 				Color = Color.Blue,
 				Level = 1,
 				Sight = 5,
+				PhysicalAttackText = "bashes",
+				MentalAttackText = "casts a magic missile at",
 			};
 			var priest = new Creature
 			{
@@ -131,6 +135,8 @@ namespace TriQuest
 				Color = Color.Green,
 				Level = 1,
 				Sight = 5,
+				PhysicalAttackText = "bashes",
+				MentalAttackText = "casts Cause Wounds at",
 			};
 
 			Heroes = new Formation();
@@ -197,18 +203,26 @@ namespace TriQuest
 
 			if (CoordsInBounds(fx + dir.DeltaX, fy + dir.DeltaY))
 			{
-				// TODO - check for collisions (fighting)
-				Tiles[fx, fy].Formation = null;
-				Tiles[fx + dir.DeltaX, fy + dir.DeltaY].Formation = f;
+				var targetTile = Tiles[fx + dir.DeltaX, fy + dir.DeltaY];
+				if (targetTile.Formation == null)
+				{
+					// move
+					Tiles[fx, fy].Formation = null;
+					targetTile.Formation = f;
+					if (f == Heroes)
+					{
+						HeroX = fx + dir.DeltaX;
+						HeroY = fy + dir.DeltaY;
+					}
+				}
+				else
+				{
+					// fight
+					Fight(Tiles[fx, fy], targetTile);
+				}
 
 				// spend time
 				f.Act(Tiles[fx + dir.DeltaX, fy + dir.DeltaY].Terrain.MovementCost);
-
-				if (f == Heroes)
-				{
-					HeroX = fx + dir.DeltaX;
-					HeroY = fy + dir.DeltaY;
-				}
 			}
 		}
 
@@ -239,6 +253,135 @@ namespace TriQuest
 			{
 				f.Facing = dir;
 				f.Act(Tiles[fx, fy].Terrain.MovementCost);
+			}
+		}
+
+		private void Fight(Tile attackerTile, Tile defenderTile)
+		{
+			var attackers = attackerTile.Formation;
+			var defenders = defenderTile.Formation;
+
+			if (attackers == null || defenders == null)
+				return;
+
+			int tileSize = 3;
+			foreach (var kvp in attackers.CreaturePositions)
+			{
+				// who is attacking now?
+				var attacker = attackers.CreaturePositions[kvp.Key];
+
+				// is attacker blocked behind another attacker? then he can't attack
+				bool blocked = false;
+				RelativePosition pos = kvp.Key;
+				while (true)
+				{
+					var apos = pos.AsAbsolute(attackers.Facing);
+					apos = AbsolutePosition.FromCoordinates(apos.Column + attackers.Facing.DeltaX, apos.Row + attackers.Facing.DeltaY);
+					if (apos == null)
+						break;
+					pos = apos.RelativeTo(attackers.Facing);
+					if (pos != kvp.Key && attackers.CreaturePositions.ContainsKey(pos))
+					{
+						Log.Append("The " + attacker.Name + " is blocked by the " + attackers.CreaturePositions[pos].Name + ".");
+						blocked = true;
+						break;
+					}
+				} 
+				if (blocked)
+					continue;
+
+				// find nearest target
+				Creature defender = null;
+				int distance;
+				var absPos = kvp.Key.AsAbsolute(attackers.Facing);
+				AbsolutePosition targetPos;
+				if (attackers.Facing == Direction.North)
+				{
+					distance = absPos.Row;
+					targetPos = AbsolutePosition.FromCoordinates(absPos.Column, tileSize - 1);
+				}
+				else if (attackers.Facing == Direction.South)
+				{
+					distance = tileSize - 1 - absPos.Row;
+					targetPos = AbsolutePosition.FromCoordinates(absPos.Column, 0);
+				}
+				else if (attackers.Facing == Direction.East)
+				{
+					distance = tileSize - 1 - absPos.Column;
+					targetPos = AbsolutePosition.FromCoordinates(0, absPos.Column);
+				}
+				else if (attackers.Facing == Direction.West)
+				{
+					distance = absPos.Column;
+					targetPos = AbsolutePosition.FromCoordinates(tileSize - 1, absPos.Column);
+				}
+				else
+					throw new Exception("Invalid formation facing, not north/south/east/west");
+				foreach (var distanceGroup in AbsolutePosition.All.GroupBy(pos2 => targetPos.DistanceTo(pos2)))
+				{
+					
+					var matches = distanceGroup.Where(pos2 => 
+						{
+							var relpos = pos2.RelativeTo(defenders.Facing);
+							return defenders.CreaturePositions.ContainsKey(relpos) && defenders.CreaturePositions[relpos] != null;
+						});
+					if (matches.Any())
+					{
+						// multiple targets at same distance? pick one at random!
+						defender = defenders.CreaturePositions[matches.Pick().RelativeTo(defenders.Facing)];
+						distance += distanceGroup.Key;
+						break;
+					}
+				}
+
+				// attaaaaack!
+				if (defender == null)
+					Log.Append("The " + attacker.Name + " has no one to attack."); // shouldn't happen...
+				else
+				{
+					var attack = attacker.Attack;
+					var defense = defender.Defense;
+					var atkBody = attacker.Body;
+					var atkMind = attacker.Mind;
+					var defBody = defender.Body;
+					var defMind = defender.Mind;
+					int atkStat, defStat;
+					string atkText;
+					if (atkBody - defBody >= atkMind - defMind)
+					{
+						// use physical attack
+						atkStat = atkBody;
+						defStat = defBody;
+						atkText = attacker.PhysicalAttackText;
+					}
+					else
+					{
+						// use mental attack
+						atkStat = atkMind;
+						defStat = defMind;
+						atkText = attacker.MentalAttackText;
+					}
+					var color = defenders == Heroes ? Color.Yellow : Color.White;
+					var atkRoll = Dice.Roll(attack, atkStat);
+					var defRoll = Dice.Roll(defense, defStat);
+					var damage = Math.Max(0, atkRoll - defRoll);
+					var msg = "The " + attacker.Name + " " + atkText + " the " + defender.Name + " (" + attack + "d" + atkStat + " vs. " + defense + "d" + defStat + ") for " + damage + " damage.";
+					defender.Health -= damage;
+					if (defender.Health <= 0)
+					{
+						msg += " The " + defender.Name + " is slain!";
+						if (defenders == Heroes)
+							color = Color.Red;
+						foreach (var p in RelativePosition.All)
+						{
+							if (defenders.CreaturePositions.ContainsKey(p) && defenders.CreaturePositions[p] == defender)
+								defenders.CreaturePositions.Remove(p); // he's dead, Jim...
+						}
+						if (!defenders.CreaturePositions.Any())
+							defenderTile.Formation = null; // they're all dead, Dave...
+					}
+					Log.Append(msg, color);
+				}
 			}
 		}
 

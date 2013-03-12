@@ -12,6 +12,11 @@ namespace TriQuest
 	/// </summary>
 	public class Creature : ICloneable<Creature>
 	{
+		public Creature()
+		{
+			Health = 100;
+		}
+
 		/// <summary>
 		/// Creature's name.
 		/// </summary>
@@ -69,6 +74,18 @@ namespace TriQuest
 		/// </summary>
 		public double Delay { get; set; }
 
+		/// <summary>
+		/// Descriptive text for the creature's physical attack, e.g. "slashes"
+		/// </summary>
+		public string PhysicalAttackText { get; set; }
+
+		/// <summary>
+		/// Descriptive text for the creature's mental attack, e.g. "ki-blasts"
+		/// </summary>
+		public string MentalAttackText { get; set; }
+
+		public int Health { get; set; }
+
 		public Creature Clone()
 		{
 			var c = new Creature();
@@ -78,9 +95,14 @@ namespace TriQuest
 			c.Defense = Defense;
 			c.Level = Level;
 			c.Mind = Mind;
+			c.Name = Name;
 			c.Sight = Sight;
 			c.Speed = Speed;
 			c.Symbol = Symbol;
+			c.Delay = Delay;
+			c.PhysicalAttackText = PhysicalAttackText;
+			c.MentalAttackText = MentalAttackText;
+			c.Health = Health;
 			return c;
 		}
 

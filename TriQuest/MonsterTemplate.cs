@@ -50,6 +50,8 @@ namespace TriQuest
 			Symbol = 'r',
 			Color = Color.Brown,
 			Sight = 3,
+			PhysicalAttackText = "bites",
+			MentalAttackText = "infects",
 		}, 1, 3);
 
 		public static MonsterTemplate Wolf = new MonsterTemplate(new Creature
@@ -63,6 +65,8 @@ namespace TriQuest
 			Symbol = 'w',
 			Color = Color.Gray,
 			Sight = 5,
+			PhysicalAttackText = "bites",
+			MentalAttackText = "howls an ear-shattering howl at",
 		}, 2, 4);
 
 		public static MonsterTemplate Goblin = new MonsterTemplate(new Creature
@@ -76,6 +80,8 @@ namespace TriQuest
 			Symbol = 'g',
 			Color = Color.Green,
 			Sight = 4,
+			PhysicalAttackText = "bonks",
+			MentalAttackText = "menaces",
 		}, 3, 5);
 
 		public static MonsterTemplate OrcBrute = new MonsterTemplate(new Creature
@@ -89,6 +95,8 @@ namespace TriQuest
 			Symbol = 'o',
 			Color = Color.Red,
 			Sight = 5,
+			PhysicalAttackText = "whacks",
+			MentalAttackText = "shouts a battle cry at",
 		}, 4, 6);
 
 		public static MonsterTemplate OrcShaman = new MonsterTemplate(new Creature
@@ -102,6 +110,8 @@ namespace TriQuest
 			Symbol = 'o',
 			Color = Color.Green,
 			Sight = 5,
+			PhysicalAttackText = "bashes",
+			MentalAttackText = "curses",
 		}, 5, 7);
 
 		public static MonsterTemplate Golem = new MonsterTemplate(new Creature
@@ -115,6 +125,8 @@ namespace TriQuest
 			Symbol = 'G',
 			Color = Color.Gray,
 			Sight = 4,
+			PhysicalAttackText = "smashes",
+			MentalAttackText = "overpowers",
 		}, 6, 8);
 
 		public static MonsterTemplate DarkSage = new MonsterTemplate(new Creature
@@ -128,6 +140,8 @@ namespace TriQuest
 			Symbol = 's',
 			Color = Color.Purple,
 			Sight = 5,
+			PhysicalAttackText = "stabs",
+			MentalAttackText = "calls down unholy lightning upon",
 		}, 7, 9);
 
 		public static MonsterTemplate ChaosDisciple = new MonsterTemplate(new Creature
@@ -141,6 +155,8 @@ namespace TriQuest
 			Symbol = 'x',
 			Color = Color.Magenta,
 			Sight = 5,
+			PhysicalAttackText = "flagellates",
+			MentalAttackText = "Logrus-blasts",
 		}, 8, 10);
 
 		public static MonsterTemplate ChaosLord = new MonsterTemplate(new Creature
@@ -154,6 +170,8 @@ namespace TriQuest
 			Symbol = 'X',
 			Color = Color.Magenta,
 			Sight = 5,
+			PhysicalAttackText = "lacerates",
+			MentalAttackText = "mind-blanks",
 		}, 10, 10);
 	}
 }
