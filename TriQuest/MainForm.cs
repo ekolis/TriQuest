@@ -180,6 +180,12 @@ namespace TriQuest
 					newHeroPositions = new Dictionary<AbsolutePosition, Creature>();
 					Log.Append("Please choose a position for the " + map.Heroes.CreaturePositions.Values.ElementAt(heroBeingPlaced).Name + ".");
 				}
+				else if (e.KeyCode == Keys.D5 || e.KeyCode == Keys.NumPad5 || e.KeyCode == Keys.Clear)
+				{
+					// wait a turn
+					map.Heroes.Act(map.Tiles[map.HeroX, map.HeroY].Terrain.MovementCost);
+					map.LetMonstersAct();
+				}
 				else
 				{
 					var dir = Direction.FromKey(e.KeyCode);
