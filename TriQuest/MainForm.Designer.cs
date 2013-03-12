@@ -132,6 +132,7 @@
 			this.sbSE.Name = "sbSE";
 			this.sbSE.Size = new System.Drawing.Size(92, 75);
 			this.sbSE.TabIndex = 8;
+			this.sbSE.TabStop = false;
 			// 
 			// sbS
 			// 
@@ -142,6 +143,7 @@
 			this.sbS.Name = "sbS";
 			this.sbS.Size = new System.Drawing.Size(92, 75);
 			this.sbS.TabIndex = 7;
+			this.sbS.TabStop = false;
 			// 
 			// sbSW
 			// 
@@ -152,6 +154,7 @@
 			this.sbSW.Name = "sbSW";
 			this.sbSW.Size = new System.Drawing.Size(92, 75);
 			this.sbSW.TabIndex = 6;
+			this.sbSW.TabStop = false;
 			// 
 			// sbE
 			// 
@@ -162,6 +165,7 @@
 			this.sbE.Name = "sbE";
 			this.sbE.Size = new System.Drawing.Size(92, 75);
 			this.sbE.TabIndex = 5;
+			this.sbE.TabStop = false;
 			// 
 			// sbC
 			// 
@@ -172,6 +176,7 @@
 			this.sbC.Name = "sbC";
 			this.sbC.Size = new System.Drawing.Size(92, 75);
 			this.sbC.TabIndex = 4;
+			this.sbC.TabStop = false;
 			// 
 			// sbW
 			// 
@@ -182,6 +187,7 @@
 			this.sbW.Name = "sbW";
 			this.sbW.Size = new System.Drawing.Size(92, 75);
 			this.sbW.TabIndex = 3;
+			this.sbW.TabStop = false;
 			// 
 			// sbNE
 			// 
@@ -192,6 +198,7 @@
 			this.sbNE.Name = "sbNE";
 			this.sbNE.Size = new System.Drawing.Size(92, 75);
 			this.sbNE.TabIndex = 2;
+			this.sbNE.TabStop = false;
 			// 
 			// sbN
 			// 
@@ -202,6 +209,7 @@
 			this.sbN.Name = "sbN";
 			this.sbN.Size = new System.Drawing.Size(92, 75);
 			this.sbN.TabIndex = 1;
+			this.sbN.TabStop = false;
 			// 
 			// sbNW
 			// 
@@ -212,6 +220,7 @@
 			this.sbNW.Name = "sbNW";
 			this.sbNW.Size = new System.Drawing.Size(92, 75);
 			this.sbNW.TabIndex = 0;
+			this.sbNW.TabStop = false;
 			// 
 			// MainForm
 			// 
