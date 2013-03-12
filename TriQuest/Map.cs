@@ -106,7 +106,9 @@ namespace TriQuest
 				Level = 1,
 				Sight = 5,
 				PhysicalAttackText = "slashes",
+				PhysicalAttackRange = 1,
 				MentalAttackText = "ki-blasts",
+				MentalAttackRange = 2,
 			};
 			var mage = new Creature
 			{
@@ -121,7 +123,9 @@ namespace TriQuest
 				Level = 1,
 				Sight = 5,
 				PhysicalAttackText = "bashes",
+				PhysicalAttackRange = 2,
 				MentalAttackText = "casts a magic missile at",
+				MentalAttackRange = 3,
 			};
 			var priest = new Creature
 			{
@@ -136,7 +140,9 @@ namespace TriQuest
 				Level = 1,
 				Sight = 5,
 				PhysicalAttackText = "smites",
+				PhysicalAttackRange = 1,
 				MentalAttackText = "casts Cause Wounds at",
+				MentalAttackRange = 3,
 			};
 
 			Heroes = new Formation();
@@ -336,7 +342,7 @@ namespace TriQuest
 
 				// attaaaaack!
 				if (defender == null)
-					Log.Append("The " + attacker.Name + " has no one to attack."); // shouldn't happen...
+					Log.Append("The " + attacker.Name + " has no one to attack."); // everyone's already dead!
 				else
 				{
 					var attack = attacker.Attack;
@@ -345,7 +351,7 @@ namespace TriQuest
 					var atkMind = attacker.Mind;
 					var defBody = defender.Body;
 					var defMind = defender.Mind;
-					int atkStat, defStat;
+					int atkStat, defStat, range;
 					string atkText;
 					if (atkBody - defBody >= atkMind - defMind)
 					{
@@ -353,6 +359,7 @@ namespace TriQuest
 						atkStat = atkBody;
 						defStat = defBody;
 						atkText = attacker.PhysicalAttackText;
+						range = attacker.PhysicalAttackRange;
 					}
 					else
 					{
@@ -360,25 +367,47 @@ namespace TriQuest
 						atkStat = atkMind;
 						defStat = defMind;
 						atkText = attacker.MentalAttackText;
+						range = attacker.MentalAttackRange;
 					}
 					var color = defenders == Heroes ? Color.Yellow : Color.White;
-					var atkRoll = Dice.Roll(attack, atkStat);
-					var defRoll = Dice.Roll(defense, defStat);
-					var damage = Math.Max(0, atkRoll - defRoll);
-					var msg = "The " + attacker.Name + " " + atkText + " the " + defender.Name + " (" + attack + "d" + atkStat + " vs. " + defense + "d" + defStat + ") for " + damage + " damage.";
-					defender.Health -= damage;
-					if (defender.Health <= 0)
+
+					// accuracy penalty: 1/3 chance to miss for each subtile out of range
+					bool miss = false;
+					for (int i = 0; i < distance - range; i++)
 					{
-						msg += " The " + defender.Name + " is slain!";
-						if (defenders == Heroes)
-							color = Color.Red;
-						foreach (var p in RelativePosition.All)
+						if (Dice.Range(1, 3) == 1)
 						{
-							if (defenders.CreaturePositions.ContainsKey(p) && defenders.CreaturePositions[p] == defender)
-								defenders.CreaturePositions.Remove(p); // he's dead, Jim...
+							miss = true;
+							break;
 						}
-						if (!defenders.CreaturePositions.Any())
-							defenderTile.Formation = null; // they're all dead, Dave...
+					}
+
+					string msg;
+					if (miss)
+					{
+						color = Color.Gray;
+						msg = "The " + attacker.Name + " " + atkText + " the " + defender.Name + ", but misses (attack range " + range + ", target distance " + distance + ").";
+					}
+					else
+					{
+						var atkRoll = Dice.Roll(attack, atkStat);
+						var defRoll = Dice.Roll(defense, defStat);
+						var damage = Math.Max(0, atkRoll - defRoll);
+						msg = "The " + attacker.Name + " " + atkText + " the " + defender.Name + " (" + attack + "d" + atkStat + " vs. " + defense + "d" + defStat + ") for " + damage + " damage.";
+						defender.Health -= damage;
+						if (defender.Health <= 0)
+						{
+							msg += " The " + defender.Name + " is slain!";
+							if (defenders == Heroes)
+								color = Color.Red;
+							foreach (var p in RelativePosition.All)
+							{
+								if (defenders.CreaturePositions.ContainsKey(p) && defenders.CreaturePositions[p] == defender)
+									defenders.CreaturePositions.Remove(p); // he's dead, Jim...
+							}
+							if (!defenders.CreaturePositions.Any())
+								defenderTile.Formation = null; // they're all dead, Dave...
+						}
 					}
 					Log.Append(msg, color);
 				}

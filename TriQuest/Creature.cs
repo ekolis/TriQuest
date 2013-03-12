@@ -15,6 +15,10 @@ namespace TriQuest
 		public Creature()
 		{
 			Health = 100;
+			PhysicalAttackText = "attacks";
+			MentalAttackText = "mind-attacks";
+			PhysicalAttackRange = 1;
+			MentalAttackRange = 1;
 		}
 
 		/// <summary>
@@ -83,6 +87,16 @@ namespace TriQuest
 		/// Descriptive text for the creature's mental attack, e.g. "ki-blasts"
 		/// </summary>
 		public string MentalAttackText { get; set; }
+
+		/// <summary>
+		/// Range of this creature's physical attack. Attacking enemies that are out of range incurs an accuracy penalty.
+		/// </summary>
+		public int PhysicalAttackRange { get; set; }
+
+		/// <summary>
+		/// Range of this creature's mental attack. Attacking enemies that are out of range incurs an accuracy penalty.
+		/// </summary>
+		public int MentalAttackRange { get; set; }
 
 		public int Health { get; set; }
 
