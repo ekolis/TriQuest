@@ -207,6 +207,7 @@ namespace TriQuest
 			}
 			picMap.Invalidate();
 			picMinimap.Invalidate();
+			BindStatsBoxes(map.Heroes);
 			RefreshLog();
 		}
 
@@ -224,6 +225,46 @@ namespace TriQuest
 				lbl.ForeColor = entries[i].Color;
 			}
 			Log.MarkAllRead();
+		}
+
+		private void BindStatsBoxes(Formation f)
+		{
+			foreach (var pos in AbsolutePosition.All)
+			{
+				var relpos = pos.RelativeTo(f.Facing);
+				if (f.CreaturePositions.ContainsKey(relpos))
+					FindStatsBox(pos).Creature = f.CreaturePositions[relpos];
+				else
+					FindStatsBox(pos).Creature = null;
+			}
+		}
+
+		private StatsBox FindStatsBox(AbsolutePosition pos)
+		{
+			if (pos == AbsolutePosition.Northwest)
+				return sbNW;
+			if (pos == AbsolutePosition.North)
+				return sbN;
+			if (pos == AbsolutePosition.Northeast)
+				return sbNE;
+			if (pos == AbsolutePosition.West)
+				return sbW;
+			if (pos == AbsolutePosition.Center)
+				return sbC;
+			if (pos == AbsolutePosition.East)
+				return sbE;
+			if (pos == AbsolutePosition.Southwest)
+				return sbSW;
+			if (pos == AbsolutePosition.South)
+				return sbS;
+			if (pos == AbsolutePosition.Southeast)
+				return sbSE;
+			throw new Exception("Invalid position specified for FindStatsBox");
+		}
+
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			BindStatsBoxes(map.Heroes);
 		}
 	}
 }

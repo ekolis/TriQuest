@@ -131,6 +131,8 @@ namespace TriQuest
 		{
 			get
 			{
+				if (!CreaturePositions.Any())
+					return 0;
 				return CreaturePositions.Values.Max(c => c.Sight);
 			}
 		}
