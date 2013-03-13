@@ -162,6 +162,41 @@ namespace TriQuest
 				MentalAttackText = "casts a magic missile at",
 				MentalAttackRange = 3,
 			};
+			mage.Skills.Add(new Skill
+			{
+				Name = "Fireball",
+				Verb = "casts",
+				Description = "Hits all enemies in the tile directly ahead with a magical attack.",
+				ManaCost = 10,
+				Use = (user, us, target) =>
+				{
+					if (target == null || target.Formation == null)
+						Log.Append("But there's no one ahead to blast!");
+					else
+					{
+						foreach (var defender in target.Formation.CreaturePositions.Values)
+						{
+							var atkRoll = Dice.Roll(user.Attack, user.Mind);
+							var defRoll = Dice.Roll(user.Defense, defender.Mind);
+							var damage = Math.Max(0, atkRoll - defRoll);
+							var msg = "Hits the " + defender.Name + " (" + user.Attack + "d" + user.Body + " vs. " + defender.Defense + "d" + defender.Body + ") for " + damage + " damage.";
+							defender.Health -= damage;
+							if (defender.Health <= 0)
+							{
+								msg += " The " + defender.Name + " is slain!";
+								foreach (var p in RelativePosition.All)
+								{
+									if (target.Formation.CreaturePositions.ContainsKey(p) && target.Formation.CreaturePositions[p] == defender)
+										target.Formation.CreaturePositions.Remove(p); // he's dead, Jim...
+								}
+								if (!target.Formation.CreaturePositions.Any())
+									target.Formation = null; // they're all dead, Dave...
+							}
+							Log.Append(msg);
+						}
+					}
+				},
+			});
 			var priest = new Creature
 			{
 				Name = "priest",
@@ -179,6 +214,28 @@ namespace TriQuest
 				MentalAttackText = "casts Cause Wounds at",
 				MentalAttackRange = 3,
 			};
+			priest.Skills.Add(new Skill
+			{
+				Name = "Heal Wounds",
+				Verb = "casts",
+				Description = "Heals some of the HP of the party. Tougher party members are easier to heal.",
+				ManaCost = 10,
+				Use = (user, us, target) =>
+				{
+					foreach (var hero in us.CreaturePositions.Values)
+					{
+						var healing = Dice.Roll(user.Mind, hero.Body);
+						var msg = "Heals the " + hero.Name + " (" + user.Mind + "d" + hero.Body + ") for " + healing + " HP.";
+						hero.Health += healing;
+						if (hero.Health > Creature.MaxHealth)
+						{
+							hero.Health = Creature.MaxHealth;
+						}
+						Log.Append(msg);
+					}
+
+				},
+			});
 
 			Heroes = new Formation();
 			Heroes.CreaturePositions[RelativePosition.Front] = warrior;
@@ -327,7 +384,7 @@ namespace TriQuest
 						blocked = true;
 						break;
 					}
-				} 
+				}
 				if (blocked)
 					continue;
 
@@ -360,8 +417,8 @@ namespace TriQuest
 					throw new Exception("Invalid formation facing, not north/south/east/west");
 				foreach (var distanceGroup in AbsolutePosition.All.GroupBy(pos2 => targetPos.DistanceTo(pos2)))
 				{
-					
-					var matches = distanceGroup.Where(pos2 => 
+
+					var matches = distanceGroup.Where(pos2 =>
 						{
 							var relpos = pos2.RelativeTo(defenders.Facing);
 							return defenders.CreaturePositions.ContainsKey(relpos) && defenders.CreaturePositions[relpos] != null;
