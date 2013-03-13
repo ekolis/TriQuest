@@ -42,7 +42,8 @@ namespace TriQuest
 		/// 1. The creature using the skill
 		/// 2. The formation that the user belongs to
 		/// 3. The tile directly in front of the user's formation.
+		/// 4. The map.
 		/// </summary>
-		public Action<Creature, Formation, Tile> Use { get; set; }
+		public Action<Creature, Formation, Tile, Map> Use { get; set; }
 	}
 }

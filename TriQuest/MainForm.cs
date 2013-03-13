@@ -219,7 +219,7 @@ namespace TriQuest
 							Tile target = null;
 							if (map.CoordsInBounds(x, y))
 								target = map.Tiles[x, y];
-							skillToUse.Use(heroUsingSkill, map.Heroes, target);
+							skillToUse.Use(heroUsingSkill, map.Heroes, target, map);
 
 							// spend mana
 							heroUsingSkill.Mana -= skillToUse.ManaCost;

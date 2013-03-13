@@ -116,7 +116,7 @@ namespace TriQuest
 				Verb = "uses",
 				Description = "Hits all enemies in the tile directly ahead with a physical attack.",
 				ManaCost = 10,
-				Use = (user, us, target) =>
+				Use = (user, us, target, map) =>
 					{
 						if (target == null || target.Formation == null)
 							Log.Append("But there's no one ahead to slash!");
@@ -151,7 +151,7 @@ namespace TriQuest
 				Verb = "goes",
 				Description = "Temporarily increases attack and body at the expense of defense and mind.",
 				ManaCost = 20,
-				Use = (user, us, target) =>
+				Use = (user, us, target, map) =>
 				{
 					user.StartBerserk(10);
 					Log.Append("RAAAAR! Warrior SMASH!");
@@ -180,7 +180,7 @@ namespace TriQuest
 				Verb = "casts",
 				Description = "Hits all enemies in the tile directly ahead with a magical attack.",
 				ManaCost = 10,
-				Use = (user, us, target) =>
+				Use = (user, us, target, map) =>
 				{
 					if (target == null || target.Formation == null)
 						Log.Append("But there's no one ahead to blast!");
@@ -215,7 +215,7 @@ namespace TriQuest
 				Verb = "casts",
 				Description = "Reduces the speed of a group of enemies. Not cumulative over multiple casts.",
 				ManaCost = 20,
-				Use = (user, us, target) =>
+				Use = (user, us, target, map) =>
 				{
 					if (target == null || target.Formation == null)
 						Log.Append("But there's no one ahead to slow!");
@@ -258,7 +258,7 @@ namespace TriQuest
 				Verb = "casts",
 				Description = "Heals some of the HP of the party. Tougher party members are easier to heal.",
 				ManaCost = 10,
-				Use = (user, us, target) =>
+				Use = (user, us, target, map) =>
 				{
 					foreach (var hero in us.CreaturePositions.Values)
 					{
@@ -272,6 +272,25 @@ namespace TriQuest
 						Log.Append(msg);
 					}
 
+				},
+			});
+			priest.Skills.Add(new Skill
+			{
+				Name = "Banish",
+				Verb = "casts",
+				Description = "Teleports a group of enemies to a random location.",
+				ManaCost = 20,
+				Use = (user, us, target, map) =>
+				{
+					if (target == null || target.Formation == null)
+						Log.Append("But there's no one ahead to banish!");
+					else
+					{
+						var locations = map.Tiles.Cast<Tile>().Where(t => t.Formation == null);
+						locations.Pick().Formation = target.Formation;
+						target.Formation = null;
+						Log.Append("The enemy disappear in a white flash!");
+					}
 				},
 			});
 
