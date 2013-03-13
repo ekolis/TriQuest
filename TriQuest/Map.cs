@@ -110,6 +110,41 @@ namespace TriQuest
 				MentalAttackText = "ki-blasts",
 				MentalAttackRange = 2,
 			};
+			warrior.Skills.Add(new Skill
+			{
+				Name = "Omnislash",
+				Verb = "uses",
+				Description = "Hits all enemies in the tile directly ahead with a physical attack.",
+				ManaCost = 10,
+				Use = (user, us, target) =>
+					{
+						if (target == null || target.Formation == null)
+							Log.Append("But there's no one ahead to slash!");
+						else
+						{
+							foreach (var defender in target.Formation.CreaturePositions.Values)
+							{
+								var atkRoll = Dice.Roll(user.Attack, user.Body);
+								var defRoll = Dice.Roll(user.Defense, defender.Body);
+								var damage = Math.Max(0, atkRoll - defRoll);
+								var msg = "Hits the " + defender.Name + " (" + user.Attack + "d" + user.Body + " vs. " + defender.Defense + "d" + defender.Body + ") for " + damage + " damage.";
+								defender.Health -= damage;
+								if (defender.Health <= 0)
+								{
+									msg += " The " + defender.Name + " is slain!";
+									foreach (var p in RelativePosition.All)
+									{
+										if (target.Formation.CreaturePositions.ContainsKey(p) && target.Formation.CreaturePositions[p] == defender)
+											target.Formation.CreaturePositions.Remove(p); // he's dead, Jim...
+									}
+									if (!target.Formation.CreaturePositions.Any())
+										target.Formation = null; // they're all dead, Dave...
+								}
+								Log.Append(msg);
+							}
+						}
+					},
+			});
 			var mage = new Creature
 			{
 				Name = "mage",

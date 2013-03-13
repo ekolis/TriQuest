@@ -14,12 +14,17 @@ namespace TriQuest
 	{
 		public Creature()
 		{
-			Health = 100;
+			Health = MaxHealth;
+			Mana = MaxMana;
 			PhysicalAttackText = "attacks";
 			MentalAttackText = "mind-attacks";
 			PhysicalAttackRange = 1;
 			MentalAttackRange = 1;
+			Skills = new List<Skill>();
 		}
+
+		public static int MaxHealth = 100;
+		public static int MaxMana = 100;
 
 		/// <summary>
 		/// Creature's name.
@@ -98,7 +103,20 @@ namespace TriQuest
 		/// </summary>
 		public int MentalAttackRange { get; set; }
 
+		/// <summary>
+		/// Creature's health. Upon reaching zero, creature dies.
+		/// </summary>
 		public int Health { get; set; }
+
+		/// <summary>
+		/// Creature's mana. Used for skills/magic.
+		/// </summary>
+		public int Mana { get; set; }
+
+		/// <summary>
+		/// Creature's skills and magic spells.
+		/// </summary>
+		public IList<Skill> Skills { get; private set; }
 
 		public Creature Clone()
 		{

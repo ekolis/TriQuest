@@ -122,6 +122,8 @@ namespace TriQuest
 		}
 
 		private int heroBeingPlaced = -1;
+		private bool skillMode = false;
+		private Creature heroUsingSkill = null;
 		private Dictionary<AbsolutePosition, Creature> newHeroPositions;
 		private bool heroesDead = false;
 
@@ -171,6 +173,101 @@ namespace TriQuest
 					}
 				}
 			}
+			else if (skillMode)
+			{
+				if (heroUsingSkill != null)
+				{
+					if (e.KeyCode == Keys.S)
+					{
+						// cancel
+						skillMode = false;
+						heroUsingSkill = null;
+						Log.Append("Never mind, then.");
+						return;
+					}
+
+					// pick skill
+					var skillIdx = GetNumberFromKey(e.KeyCode) - 1;
+					var skillToUse = heroUsingSkill.Skills.ElementAtOrDefault(skillIdx);
+
+					if (skillToUse == null)
+					{
+						// prompt for skill to use
+						Log.Append("What skill will the " + heroUsingSkill.Name + " use? (press S again to cancel)");
+						int skillNum = 0;
+						foreach (var skill in heroUsingSkill.Skills)
+						{
+							skillNum++;
+							Log.Append(skillNum + ": " + skill.Name + " (" + skill.ManaCost + " mana) - " + skill.Description);
+						}
+					}
+					else if (skillToUse.ManaCost > heroUsingSkill.Mana)
+					{
+						// not enough mana, cancel
+						Log.Append("The " + heroUsingSkill.Name + " lacks the mana for " + skillToUse.Name + "!");
+						skillMode = false;
+						heroUsingSkill = null;
+						Log.Append("Never mind, then.");
+						return;
+					}
+					else
+					{
+						// use skill
+						Log.Append("The " + heroUsingSkill.Name + " " + skillToUse.Verb + " " + skillToUse.Name + "!");
+						int x = map.HeroX + map.Heroes.Facing.DeltaX;
+						int y = map.HeroY + map.Heroes.Facing.DeltaY;
+						Tile target = null;
+						if (map.CoordsInBounds(x, y))
+							target = map.Tiles[x, y];
+						skillToUse.Use(heroUsingSkill, map.Heroes, target);
+
+						// use time
+						map.Heroes.Act(map.Tiles[map.HeroX, map.HeroY].Terrain.MovementCost);
+						map.LetMonstersAct();
+
+						// done using skill
+						skillMode = false;
+						heroUsingSkill = null;
+					}
+				}
+				else
+				{
+					if (e.KeyCode == Keys.S)
+					{
+						// cancel
+						skillMode = false;
+						heroUsingSkill = null;
+						Log.Append("Never mind, then.");
+						return;
+					}
+
+					// pick hero
+					var heroIdx = GetNumberFromKey(e.KeyCode) - 1;
+					heroUsingSkill = map.Heroes.CreaturePositions.Values.ElementAtOrDefault(heroIdx);
+					if (heroUsingSkill == null)
+					{
+						// didn't pick a hero
+						Log.Append("Who will use a skill? (press S again to cancel)");
+						int heroNum = 0;
+						foreach (var hero in map.Heroes.CreaturePositions.Values)
+						{
+							heroNum++;
+							Log.Append(heroNum + ": " + hero.Name, hero.Color);
+						}
+					}
+					else
+					{
+						// prompt for skill to use
+						Log.Append("What skill will the " + heroUsingSkill.Name + " use? (press S again to cancel)");
+						int skillNum = 0;
+						foreach (var skill in heroUsingSkill.Skills)
+						{
+							skillNum++;
+							Log.Append(skillNum + ": " + skill.Name + " (" + skill.ManaCost + " mana) - " + skill.Description);
+						}
+					}
+				}
+			}
 			else
 			{
 				if (e.KeyCode == Keys.F)
@@ -179,6 +276,18 @@ namespace TriQuest
 					heroBeingPlaced = 0;
 					newHeroPositions = new Dictionary<AbsolutePosition, Creature>();
 					Log.Append("Please choose a position for the " + map.Heroes.CreaturePositions.Values.ElementAt(heroBeingPlaced).Name + ".");
+				}
+				else if (e.KeyCode == Keys.S)
+				{
+					// S: use skill
+					skillMode = true;
+					Log.Append("Who will use a skill? (press S again to cancel)");
+					int heroNum = 0;
+					foreach (var hero in map.Heroes.CreaturePositions.Values)
+					{
+						heroNum++;
+						Log.Append(heroNum + ": " + hero.Name, hero.Color);
+					}
 				}
 				else if (e.KeyCode == Keys.D5 || e.KeyCode == Keys.NumPad5 || e.KeyCode == Keys.Clear)
 				{
@@ -215,6 +324,31 @@ namespace TriQuest
 			picMinimap.Invalidate();
 			BindStatsBoxes(map.Heroes);
 			RefreshLog();
+		}
+
+		private int GetNumberFromKey(Keys key)
+		{
+			if (key == Keys.D0 || key == Keys.NumPad0)
+				return 0;
+			else if (key == Keys.D1 || key == Keys.NumPad1)
+				return 1;
+			else if (key == Keys.D2 || key == Keys.NumPad2)
+				return 2;
+			else if (key == Keys.D3 || key == Keys.NumPad3)
+				return 3;
+			else if (key == Keys.D4 || key == Keys.NumPad4)
+				return 4;
+			else if (key == Keys.D5 || key == Keys.NumPad5)
+				return 5;
+			else if (key == Keys.D6 || key == Keys.NumPad6)
+				return 6;
+			else if (key == Keys.D7 || key == Keys.NumPad7)
+				return 7;
+			else if (key == Keys.D8 || key == Keys.NumPad8)
+				return 8;
+			else if (key == Keys.D9 || key == Keys.NumPad9)
+				return 9;
+			return -1; // not a number key
 		}
 
 		private void RefreshLog()
