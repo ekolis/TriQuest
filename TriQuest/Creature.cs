@@ -150,6 +150,45 @@ namespace TriQuest
 		public void Act(double actionCost)
 		{
 			Delay += actionCost / Speed;
+			BerserkTimer -= actionCost / Speed;
+			if (BerserkTimer <= 0)
+				StopBerserk();
+		}
+
+		public double BerserkTimer { get; private set; }
+		public bool IsBerserk { get; private set; }
+
+		/// <summary>
+		/// Starts berserk mode.
+		/// </summary>
+		/// <param name="time">How long to be berserk?</param>
+		public void StartBerserk(int time)
+		{
+			if (!IsBerserk)
+			{
+				Attack += 1;
+				Defense -= 1;
+				Body += 1;
+				Mind -= 1;
+			}
+			BerserkTimer += time;
+			IsBerserk = true;
+		}
+
+		/// <summary>
+		/// Stops berserk mode.
+		/// </summary>
+		public void StopBerserk()
+		{
+			if (IsBerserk)
+			{
+				Attack -= 1;
+				Defense += 1;
+				Body -= 1;
+				Mind += 1;
+			}
+			BerserkTimer = 0;
+			IsBerserk = false;
 		}
 	}
 }

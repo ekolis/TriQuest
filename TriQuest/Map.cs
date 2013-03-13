@@ -145,6 +145,18 @@ namespace TriQuest
 						}
 					},
 			});
+			warrior.Skills.Add(new Skill
+			{
+				Name = "Berserk",
+				Verb = "goes",
+				Description = "Temporarily increases attack and body at the expense of defense and mind.",
+				ManaCost = 20,
+				Use = (user, us, target) =>
+				{
+					user.StartBerserk(10);
+					Log.Append("RAAAAR! Warrior SMASH!");
+				},
+			});
 			var mage = new Creature
 			{
 				Name = "mage",
