@@ -209,6 +209,32 @@ namespace TriQuest
 					}
 				},
 			});
+			mage.Skills.Add(new Skill
+			{
+				Name = "Slow",
+				Verb = "casts",
+				Description = "Reduces the speed of a group of enemies. Not cumulative over multiple casts.",
+				ManaCost = 20,
+				Use = (user, us, target) =>
+				{
+					if (target == null || target.Formation == null)
+						Log.Append("But there's no one ahead to slow!");
+					else
+					{
+						foreach (var defender in target.Formation.CreaturePositions.Values)
+						{
+							if (!defender.HasBeenSlowed)
+							{
+								defender.Speed /= 2;
+								Log.Append("The " + defender.Name + " seems more sluggish.");
+								defender.HasBeenSlowed = true;
+							}
+							else
+								Log.Append("The " + defender.Name + " is already slow.");
+						}
+					}
+				},
+			});
 			var priest = new Creature
 			{
 				Name = "priest",

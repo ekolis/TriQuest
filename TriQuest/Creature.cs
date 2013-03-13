@@ -190,5 +190,10 @@ namespace TriQuest
 			BerserkTimer = 0;
 			IsBerserk = false;
 		}
+
+		/// <summary>
+		/// Has this creature been slowed already? If so, it's immune to further slowing.
+		/// </summary>
+		public bool HasBeenSlowed { get; set; }
 	}
 }
