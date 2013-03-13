@@ -30,8 +30,8 @@
 		{
 			this.txtSymbol = new System.Windows.Forms.Label();
 			this.txtName = new System.Windows.Forms.Label();
-			this.lblHealth = new System.Windows.Forms.Label();
-			this.txtHealth = new System.Windows.Forms.Label();
+			this.lblHealthMana = new System.Windows.Forms.Label();
+			this.txtHealthMana = new System.Windows.Forms.Label();
 			this.lblAttackDefense = new System.Windows.Forms.Label();
 			this.txtAttackDefense = new System.Windows.Forms.Label();
 			this.txtBodyMind = new System.Windows.Forms.Label();
@@ -59,24 +59,24 @@
 			this.txtName.TabIndex = 1;
 			this.txtName.Text = "roguelike developer";
 			// 
-			// lblHealth
+			// lblHealthMana
 			// 
-			this.lblHealth.AutoSize = true;
-			this.lblHealth.Location = new System.Drawing.Point(4, 20);
-			this.lblHealth.Name = "lblHealth";
-			this.lblHealth.Size = new System.Drawing.Size(41, 13);
-			this.lblHealth.TabIndex = 2;
-			this.lblHealth.Text = "Health:";
+			this.lblHealthMana.AutoSize = true;
+			this.lblHealthMana.Location = new System.Drawing.Point(4, 20);
+			this.lblHealthMana.Name = "lblHealthMana";
+			this.lblHealthMana.Size = new System.Drawing.Size(38, 13);
+			this.lblHealthMana.TabIndex = 2;
+			this.lblHealthMana.Text = "H / M:";
 			// 
-			// txtHealth
+			// txtHealthMana
 			// 
-			this.txtHealth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.txtHealth.AutoSize = true;
-			this.txtHealth.Location = new System.Drawing.Point(72, 20);
-			this.txtHealth.Name = "txtHealth";
-			this.txtHealth.Size = new System.Drawing.Size(25, 13);
-			this.txtHealth.TabIndex = 3;
-			this.txtHealth.Text = "100";
+			this.txtHealthMana.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.txtHealthMana.AutoSize = true;
+			this.txtHealthMana.Location = new System.Drawing.Point(43, 20);
+			this.txtHealthMana.Name = "txtHealthMana";
+			this.txtHealthMana.Size = new System.Drawing.Size(54, 13);
+			this.txtHealthMana.TabIndex = 3;
+			this.txtHealthMana.Text = "100 / 100";
 			// 
 			// lblAttackDefense
 			// 
@@ -146,8 +146,8 @@
 			this.Controls.Add(this.lblBodyMind);
 			this.Controls.Add(this.txtAttackDefense);
 			this.Controls.Add(this.lblAttackDefense);
-			this.Controls.Add(this.txtHealth);
-			this.Controls.Add(this.lblHealth);
+			this.Controls.Add(this.txtHealthMana);
+			this.Controls.Add(this.lblHealthMana);
 			this.Controls.Add(this.txtName);
 			this.Controls.Add(this.txtSymbol);
 			this.DoubleBuffered = true;
@@ -163,8 +163,8 @@
 
 		private System.Windows.Forms.Label txtSymbol;
 		private System.Windows.Forms.Label txtName;
-		private System.Windows.Forms.Label lblHealth;
-		private System.Windows.Forms.Label txtHealth;
+		private System.Windows.Forms.Label lblHealthMana;
+		private System.Windows.Forms.Label txtHealthMana;
 		private System.Windows.Forms.Label lblAttackDefense;
 		private System.Windows.Forms.Label txtAttackDefense;
 		private System.Windows.Forms.Label txtBodyMind;

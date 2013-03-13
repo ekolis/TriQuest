@@ -221,6 +221,9 @@ namespace TriQuest
 							target = map.Tiles[x, y];
 						skillToUse.Use(heroUsingSkill, map.Heroes, target);
 
+						// spend mana
+						heroUsingSkill.Mana -= skillToUse.ManaCost;
+
 						// use time
 						map.Heroes.Act(map.Tiles[map.HeroX, map.HeroY].Terrain.MovementCost);
 						map.LetMonstersAct();

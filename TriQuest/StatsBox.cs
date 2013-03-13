@@ -43,7 +43,7 @@ namespace TriQuest
 				txtSymbol.Text = Creature.Symbol.ToString();
 				txtSymbol.ForeColor = Creature.Color;
 				txtName.Text = Creature.Name;
-				txtHealth.Text = Creature.Health.ToString();
+				txtHealthMana.Text = string.Format("{0} / {1}", Creature.Health, Creature.Mana);
 				txtAttackDefense.Text = string.Format("{0} / {1}", Creature.Attack, Creature.Defense);
 				txtBodyMind.Text = string.Format("{0} / {1}", Creature.Body, Creature.Mind);
 				txtSpeedSight.Text = string.Format("{0} / {1}", Creature.Speed, Creature.Sight);
