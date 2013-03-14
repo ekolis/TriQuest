@@ -53,7 +53,7 @@ namespace TriQuest
 
 		/// <summary>
 		/// Creature's movement and attack speed.
-		/// A formation moves at the speed of its slowest creature, but faster creatures can get multiple attacks.
+		/// A formation moves at the speed of its slowest creature.
 		/// </summary>
 		public int Speed { get; set; }
 
