@@ -52,6 +52,8 @@ namespace TriQuest
 			Sight = 3,
 			PhysicalAttackText = "bites",
 			MentalAttackText = "infects",
+			ItemDropChance = 0.05,
+			ItemDropType = ItemType.Consumable,
 		}, 1, 3);
 
 		public static MonsterTemplate Wolf = new MonsterTemplate(new Creature
@@ -67,6 +69,8 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "bites",
 			MentalAttackText = "howls an ear-shattering howl at",
+			ItemDropChance = 0.1,
+			ItemDropType = ItemType.Consumable,
 		}, 2, 4);
 
 		public static MonsterTemplate Goblin = new MonsterTemplate(new Creature
@@ -82,6 +86,8 @@ namespace TriQuest
 			Sight = 4,
 			PhysicalAttackText = "bonks",
 			MentalAttackText = "menaces",
+			ItemDropChance = 0.15,
+			ItemDropType = ItemType.Armor,
 		}, 3, 5);
 
 		public static MonsterTemplate OrcBrute = new MonsterTemplate(new Creature
@@ -97,6 +103,8 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "whacks",
 			MentalAttackText = "shouts a battle cry at",
+			ItemDropChance = 0.2,
+			ItemDropType = ItemType.Weapon,
 		}, 4, 6);
 
 		public static MonsterTemplate OrcShaman = new MonsterTemplate(new Creature
@@ -112,6 +120,8 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "bashes",
 			MentalAttackText = "curses",
+			ItemDropChance = 0.2,
+			ItemDropType = ItemType.Consumable,
 		}, 5, 7);
 
 		public static MonsterTemplate Golem = new MonsterTemplate(new Creature
@@ -127,6 +137,8 @@ namespace TriQuest
 			Sight = 4,
 			PhysicalAttackText = "smashes",
 			MentalAttackText = "overpowers",
+			ItemDropChance = 0.25,
+			ItemDropType = ItemType.Armor,
 		}, 6, 8);
 
 		public static MonsterTemplate DarkSage = new MonsterTemplate(new Creature
@@ -142,6 +154,8 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "stabs",
 			MentalAttackText = "calls down unholy lightning upon",
+			ItemDropChance = 0.25,
+			ItemDropType = ItemType.Consumable,
 		}, 7, 9);
 
 		public static MonsterTemplate ChaosDisciple = new MonsterTemplate(new Creature
@@ -157,6 +171,8 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "flagellates",
 			MentalAttackText = "Logrus-blasts",
+			ItemDropChance = 0.25,
+			ItemDropType = ItemType.Weapon,
 		}, 8, 10);
 
 		public static MonsterTemplate ChaosLord = new MonsterTemplate(new Creature
@@ -172,6 +188,8 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "lacerates",
 			MentalAttackText = "mind-blanks",
+			ItemDropChance = 0.0,
+			ItemDropType = ItemType.Consumable,
 		}, 10, 10);
 	}
 }

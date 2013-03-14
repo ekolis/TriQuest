@@ -12,6 +12,11 @@ namespace TriQuest
 	/// </summary>
 	public class Tile
 	{
+		public Tile()
+		{
+			Items = new Dictionary<AbsolutePosition, Item>();
+		}
+
 		/// <summary>
 		/// The danger level of this tile. Controls its terrain and the kinds of monsters that spawn here.
 		/// </summary>
@@ -50,20 +55,36 @@ namespace TriQuest
 		public char GetSymbol(AbsolutePosition pos)
 		{
 			if (Formation == null)
+			{
+				if (Items.ContainsKey(pos))
+					return Items[pos].Symbol;
 				return Terrain.Symbol;
+			}
 			var creature = Formation.GetCreature(pos);
 			if (creature == null)
+			{
+				if (Items.ContainsKey(pos))
+					return Items[pos].Symbol;
 				return Terrain.Symbol;
+			}
 			return creature.Symbol;
 		}
 
 		public Color GetColor(AbsolutePosition pos)
 		{
 			if (Formation == null)
+			{
+				if (Items.ContainsKey(pos))
+					return Items[pos].Color;
 				return Terrain.Color;
+			}
 			var creature = Formation.GetCreature(pos);
 			if (creature == null)
+			{
+				if (Items.ContainsKey(pos))
+					return Items[pos].Color;
 				return Terrain.Color;
+			}
 			return creature.Color;
 		}
 
@@ -75,5 +96,10 @@ namespace TriQuest
 			get;
 			set;
 		}
+
+		/// <summary>
+		/// Items that are lying on the ground.
+		/// </summary>
+		public IDictionary<AbsolutePosition, Item> Items { get; private set; }
 	}
 }

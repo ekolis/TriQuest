@@ -7,11 +7,23 @@ using System.Drawing;
 
 namespace TriQuest
 {
+	public enum ItemType
+	{
+		Weapon,
+		Armor,
+		Consumable
+	}
+
 	/// <summary>
 	/// An equippable or consumable item.
 	/// </summary>
 	public abstract class Item
 	{
+		public Item()
+		{
+			all.Add(this);
+		}
+
 		/// <summary>
 		/// The name of the item.
 		/// </summary>
@@ -27,13 +39,9 @@ namespace TriQuest
 		/// </summary>
 		public Color Color { get; set; }
 
-		public static IEnumerable<Item> All
-		{
-			get
-			{
-				return Equipment.All.Cast<Item>().Union(Consumable.All.Cast<Item>());
-			}
-		}
+		private static HashSet<Item> all = new HashSet<Item>();
+
+		public static IEnumerable<Item> All { get { return all; } }
 
 		/// <summary>
 		/// What happens when this item is found by the heroes?
@@ -46,6 +54,12 @@ namespace TriQuest
 	/// </summary>
 	public abstract class Equipment : Item
 	{
+		public Equipment()
+			: base()
+		{
+			all.Add(this);
+		}
+
 		/// <summary>
 		/// The hero who can wield/wear this item.
 		/// </summary>
@@ -117,13 +131,9 @@ namespace TriQuest
 				return i.ToString();
 		}
 
-		public static IEnumerable<Equipment> All
-		{
-			get
-			{
-				return Weapon.All.Cast<Equipment>().Union(Armor.All.Cast<Equipment>());
-			}
-		}
+		private static HashSet<Equipment> all = new HashSet<Equipment>();
+
+		public static new IEnumerable<Equipment> All { get { return all; } }
 
 		public override void Found(Formation heroes)
 		{
@@ -134,23 +144,15 @@ namespace TriQuest
 
 	public class Weapon : Equipment
 	{
-		private static IEnumerable<Weapon> all = new Weapon[]
+		public Weapon()
+			: base()
 		{
-			Shortsword,
-			Longsword,
-			Greatsword,
-			BattleAxe,
-			FireRod,
-			IceRod,
-			LightningRod,
-			TempestRod,
-			Mace,
-			BoStaff,
-			Talisman,
-			DivinersRing,
-		};
+			all.Add(this);
+		}
 
-		public static IEnumerable<Weapon> All { get { return all; } }
+		private static HashSet<Weapon> all = new HashSet<Weapon>();
+
+		public static new IEnumerable<Weapon> All { get { return all; } }
 
 		public static Weapon Shortsword = new Weapon
 		{
@@ -273,20 +275,15 @@ namespace TriQuest
 
 	public class Armor : Equipment
 	{
-		private static IEnumerable<Armor> all = new Armor[]
+		public Armor()
+			: base()
 		{
-			Chainmail,
-			Platemail,
-			CrystalArmor,
-			WizardsRobe,
-			RobeOfProtection,
-			RobeOfWildMagic,
-			Cassock,
-			MonksRobe,
-			LeatherCuirass,
-		};
+			all.Add(this);
+		}
 
-		public static IEnumerable<Armor> All { get { return all; } }
+		private static HashSet<Armor> all = new HashSet<Armor>();
+
+		public static new IEnumerable<Armor> All { get { return all; } }
 
 		public static Armor Chainmail = new Armor
 		{
@@ -381,9 +378,15 @@ namespace TriQuest
 
 	public class Consumable : Item
 	{
-		private static Consumable[] all = new Consumable[] { HealthPack, HealthPotion, ManaPack, ManaPotion };
+		public Consumable()
+			: base()
+		{
+			all.Add(this);
+		}
 
-		public static IEnumerable<Consumable> All { get { return all; } }
+		private static HashSet<Consumable> all = new HashSet<Consumable>();
+
+		public static new IEnumerable<Consumable> All { get { return all; } }
 
 		public override void Found(Formation heroes)
 		{

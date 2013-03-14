@@ -118,6 +118,16 @@ namespace TriQuest
 		/// </summary>
 		public IList<Skill> Skills { get; private set; }
 
+		/// <summary>
+		/// The chance that this creature will drop an item when killed.
+		/// </summary>
+		public double ItemDropChance { get; set; }
+
+		/// <summary>
+		/// The type of item that this creature drops when killed.
+		/// </summary>
+		public ItemType ItemDropType { get; set; }
+
 		public Creature Clone()
 		{
 			var c = new Creature();
@@ -135,6 +145,11 @@ namespace TriQuest
 			c.PhysicalAttackText = PhysicalAttackText;
 			c.MentalAttackText = MentalAttackText;
 			c.Health = Health;
+			c.ItemDropChance = ItemDropChance;
+			c.ItemDropType = ItemDropType;
+			c.BerserkTimer = BerserkTimer;
+			c.IsBerserk = IsBerserk;
+			c.HasBeenSlowed = HasBeenSlowed;
 			return c;
 		}
 
@@ -290,7 +305,7 @@ namespace TriQuest
 									foreach (var p in RelativePosition.All)
 									{
 										if (target.Formation.CreaturePositions.ContainsKey(p) && target.Formation.CreaturePositions[p] == defender)
-											target.Formation.CreaturePositions.Remove(p); // he's dead, Jim...
+											Map.KillCreature(target, p);
 									}
 									if (!target.Formation.CreaturePositions.Any())
 										target.Formation = null; // they're all dead, Dave...
@@ -328,7 +343,7 @@ namespace TriQuest
 								foreach (var p in RelativePosition.All)
 								{
 									if (target.Formation.CreaturePositions.ContainsKey(p) && target.Formation.CreaturePositions[p] == defender)
-										target.Formation.CreaturePositions.Remove(p); // he's dead, Jim...
+										Map.KillCreature(target, p); // he's dead, Jim...
 								}
 								if (!target.Formation.CreaturePositions.Any())
 									target.Formation = null; // they're all dead, Dave...

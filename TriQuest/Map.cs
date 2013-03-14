@@ -351,7 +351,9 @@ namespace TriQuest
 							foreach (var p in RelativePosition.All)
 							{
 								if (defenders.CreaturePositions.ContainsKey(p) && defenders.CreaturePositions[p] == defender)
-									defenders.CreaturePositions.Remove(p); // he's dead, Jim...
+								{
+									KillCreature(defenderTile, p); // he's dead, Jim...
+								}
 							}
 							if (!defenders.CreaturePositions.Any())
 								defenderTile.Formation = null; // they're all dead, Dave...
@@ -360,6 +362,30 @@ namespace TriQuest
 					Log.Append(msg, color);
 				}
 			}
+		}
+
+		public static void KillCreature(Tile tile, RelativePosition p)
+		{
+			var creature = tile.Formation.CreaturePositions[p];
+			if (Dice.Range(0.0, 1.0) < creature.ItemDropChance)
+			{
+				Item item;
+				if (creature.ItemDropType == ItemType.Armor)
+					item = Armor.All.Pick();
+				else if (creature.ItemDropType == ItemType.Consumable)
+					item = Consumable.All.Pick();
+				else if (creature.ItemDropType == ItemType.Weapon)
+					item = Weapon.All.Pick();
+				else
+					throw new Exception("Invalid item drop type, must be armor/consumable/weapon.");
+				var msg = "The " + creature.Name + " drops a " + item.Name + ".";
+				var apos = p.AsAbsolute(tile.Formation.Facing);
+				if (tile.Items.ContainsKey(apos) && tile.Items[apos] != null)
+					msg += " The " + tile.Items[apos].Name + " is crushed underneath.";
+				Log.Append(msg, Color.Cyan);
+				tile.Items[apos] = item;
+			}
+			tile.Formation.CreaturePositions.Remove(p);
 		}
 
 		/// <summary>
