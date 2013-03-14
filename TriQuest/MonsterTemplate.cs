@@ -52,7 +52,7 @@ namespace TriQuest
 			Sight = 3,
 			PhysicalAttackText = "bites",
 			MentalAttackText = "infects",
-			ItemDropChance = 0.05,
+			ItemDropChance = 0.1,
 			ItemDropType = ItemType.Consumable,
 		}, 1, 3);
 
@@ -69,7 +69,7 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "bites",
 			MentalAttackText = "howls an ear-shattering howl at",
-			ItemDropChance = 0.1,
+			ItemDropChance = 0.2,
 			ItemDropType = ItemType.Consumable,
 		}, 2, 4);
 
@@ -86,7 +86,7 @@ namespace TriQuest
 			Sight = 4,
 			PhysicalAttackText = "bonks",
 			MentalAttackText = "menaces",
-			ItemDropChance = 0.15,
+			ItemDropChance = 0.3,
 			ItemDropType = ItemType.Armor,
 		}, 3, 5);
 
@@ -103,7 +103,7 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "whacks",
 			MentalAttackText = "shouts a battle cry at",
-			ItemDropChance = 0.2,
+			ItemDropChance = 0.4,
 			ItemDropType = ItemType.Weapon,
 		}, 4, 6);
 
@@ -120,7 +120,7 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "bashes",
 			MentalAttackText = "curses",
-			ItemDropChance = 0.2,
+			ItemDropChance = 0.4,
 			ItemDropType = ItemType.Consumable,
 		}, 5, 7);
 
@@ -137,7 +137,7 @@ namespace TriQuest
 			Sight = 4,
 			PhysicalAttackText = "smashes",
 			MentalAttackText = "overpowers",
-			ItemDropChance = 0.25,
+			ItemDropChance = 0.5,
 			ItemDropType = ItemType.Armor,
 		}, 6, 8);
 
@@ -154,7 +154,7 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "stabs",
 			MentalAttackText = "calls down unholy lightning upon",
-			ItemDropChance = 0.25,
+			ItemDropChance = 0.5,
 			ItemDropType = ItemType.Consumable,
 		}, 7, 9);
 
@@ -171,7 +171,7 @@ namespace TriQuest
 			Sight = 5,
 			PhysicalAttackText = "flagellates",
 			MentalAttackText = "Logrus-blasts",
-			ItemDropChance = 0.25,
+			ItemDropChance = 0.5,
 			ItemDropType = ItemType.Weapon,
 		}, 8, 10);
 
