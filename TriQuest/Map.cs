@@ -167,6 +167,11 @@ namespace TriQuest
 					{
 						HeroX = fx + dir.DeltaX;
 						HeroY = fy + dir.DeltaY;
+
+						// pick up items
+						foreach (var item in targetTile.Items.Values)
+							item.Found(Heroes);
+						targetTile.Items.Clear();
 					}
 				}
 				else
