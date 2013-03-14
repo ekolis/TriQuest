@@ -160,7 +160,7 @@ namespace TriQuest
 			Symbol = '/',
 			Color = Color.Silver,
 			Hero = Creature.Warrior,
-			Attack = 2,
+			Attack = 4,
 		};
 
 		public static Weapon Longsword = new Weapon
@@ -169,7 +169,7 @@ namespace TriQuest
 			Symbol = '\\',
 			Color = Color.Silver,
 			Hero = Creature.Warrior,
-			Attack = 3,
+			Attack = 6,
 			Defense = -1,
 		};
 
@@ -179,7 +179,7 @@ namespace TriQuest
 			Symbol = '|',
 			Color = Color.Silver,
 			Hero = Creature.Warrior,
-			Attack = 4,
+			Attack = 8,
 			Defense = -2,
 		};
 
@@ -189,7 +189,7 @@ namespace TriQuest
 			Symbol = '{',
 			Color = Color.Silver,
 			Hero = Creature.Warrior,
-			Attack = 5,
+			Attack = 10,
 			Defense = -3,
 		};
 
@@ -199,8 +199,8 @@ namespace TriQuest
 			Symbol = '/',
 			Color = Color.Red,
 			Hero = Creature.Mage,
-			Attack = 1,
-			Mind = 2,
+			Attack = 2,
+			Mind = 4,
 		};
 
 		public static Weapon IceRod = new Weapon
@@ -209,8 +209,8 @@ namespace TriQuest
 			Symbol = '/',
 			Color = Color.Cyan,
 			Hero = Creature.Mage,
-			Defense = 1,
-			Mind = 2,
+			Defense = 2,
+			Mind = 4,
 		};
 
 		public static Weapon LightningRod = new Weapon
@@ -219,8 +219,8 @@ namespace TriQuest
 			Symbol = '/',
 			Color = Color.Yellow,
 			Hero = Creature.Mage,
-			Sight = 1,
-			Mind = 2,
+			Sight = 2,
+			Mind = 4,
 		};
 
 		public static Weapon TempestRod = new Weapon
@@ -229,9 +229,9 @@ namespace TriQuest
 			Symbol = '/',
 			Color = Color.White,
 			Hero = Creature.Mage,
-			Attack = 1,
-			Defense = 1,
-			Sight = 1,
+			Attack = 2,
+			Defense = 2,
+			Sight = 2,
 		};
 
 		public static Weapon Mace = new Weapon
@@ -240,7 +240,7 @@ namespace TriQuest
 			Symbol = '\\',
 			Color = Color.DarkGray,
 			Hero = Creature.Priest,
-			Attack = 2,
+			Attack = 5,
 		};
 
 		public static Weapon BoStaff = new Weapon
@@ -249,8 +249,8 @@ namespace TriQuest
 			Symbol = '\\',
 			Color = Color.Brown,
 			Hero = Creature.Priest,
-			Attack = 1,
-			Defense = 1,
+			Attack = 3,
+			Defense = 3,
 		};
 
 		public static Weapon Talisman = new Weapon
@@ -259,8 +259,8 @@ namespace TriQuest
 			Symbol = '0',
 			Color = Color.Yellow,
 			Hero = Creature.Priest,
-			Body = 1,
-			Mind = 1,
+			Body = 3,
+			Mind = 3,
 		};
 
 		public static Weapon DivinersRing = new Weapon
@@ -269,7 +269,7 @@ namespace TriQuest
 			Symbol = '=',
 			Color = Color.Cyan,
 			Hero = Creature.Priest,
-			Sight = 3,
+			Sight = 4,
 		};
 	}
 
@@ -291,7 +291,7 @@ namespace TriQuest
 			Symbol = '#',
 			Color = Color.LightGray,
 			Hero = Creature.Warrior,
-			Defense = 2,
+			Defense = 3,
 		};
 
 		public static Armor Platemail = new Armor
@@ -300,7 +300,7 @@ namespace TriQuest
 			Symbol = '#',
 			Color = Color.Silver,
 			Hero = Creature.Warrior,
-			Defense = 3,
+			Defense = 5,
 			Body = -1,
 		};
 
@@ -310,7 +310,7 @@ namespace TriQuest
 			Symbol = '#',
 			Color = Color.Cyan,
 			Hero = Creature.Warrior,
-			Defense = 4,
+			Defense = 7,
 			Body = -2,
 		};
 
@@ -320,8 +320,8 @@ namespace TriQuest
 			Symbol = '#',
 			Color = Color.Blue,
 			Hero = Creature.Mage,
-			Defense = 1,
-			Mind = 1,
+			Defense = 2,
+			Mind = 2,
 		};
 
 		public static Armor RobeOfProtection = new Armor
@@ -330,7 +330,7 @@ namespace TriQuest
 			Symbol = '#',
 			Color = Color.Gray,
 			Hero = Creature.Mage,
-			Defense = 2,
+			Defense = 4,
 		};
 
 		public static Armor RobeOfWildMagic = new Armor
@@ -340,8 +340,8 @@ namespace TriQuest
 			Color = Color.Red,
 			Hero = Creature.Mage,
 			Defense = -1,
-			Attack = 1,
-			Mind = 2,
+			Attack = 2,
+			Mind = 4,
 		};
 
 		public static Armor Cassock = new Armor
@@ -351,7 +351,7 @@ namespace TriQuest
 			Color = Color.DarkGray,
 			Hero = Creature.Priest,
 			Defense = 1,
-			Body = 1,
+			Body = 3,
 		};
 
 		public static Armor MonksRobe = new Armor
@@ -360,10 +360,10 @@ namespace TriQuest
 			Symbol = '#',
 			Color = Color.Brown,
 			Hero = Creature.Priest,
-			Body = 1,
-			Mind = 1,
-			Defense = 1,
-			Attack = -1,
+			Body = 2,
+			Mind = 2,
+			Defense = 2,
+			Attack = -2,
 		};
 
 		public static Armor LeatherCuirass = new Armor
@@ -372,7 +372,7 @@ namespace TriQuest
 			Symbol = '#',
 			Color = Color.Beige,
 			Hero = Creature.Priest,
-			Defense = 2,
+			Defense = 3,
 		};
 	}
 
