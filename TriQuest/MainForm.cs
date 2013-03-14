@@ -115,15 +115,15 @@ namespace TriQuest
 				{
 					if (map.TestLineOfSight(map.HeroX, map.HeroY, x, y))
 						DrawTileSimple(map.Tiles[x, y], g, font, x * charSize, y * charSize);
-					else if (map.Tiles[x,y].HasBeenSeen)
+					else if (map.Tiles[x, y].HasBeenSeen)
 						DrawTileSimpleFogged(map.Tiles[x, y], g, font, x * charSize, y * charSize);
 				}
 			}
 		}
 
 		private int heroBeingPlaced = -1;
-		private bool skillMode = false;
-		private Creature heroUsingSkill = null;
+		private char mode = ' ';
+		private Creature heroDoingStuff = null;
 		private Dictionary<AbsolutePosition, Creature> newHeroPositions;
 		private bool heroesDead = false;
 
@@ -173,15 +173,15 @@ namespace TriQuest
 					}
 				}
 			}
-			else if (skillMode)
+			else if (mode == 's')
 			{
-				if (heroUsingSkill != null)
+				if (heroDoingStuff != null)
 				{
 					if (e.KeyCode == Keys.S)
 					{
 						// cancel
-						skillMode = false;
-						heroUsingSkill = null;
+						mode = ' ';
+						heroDoingStuff = null;
 						Log.Append("Never mind, then.");
 					}
 					else
@@ -189,48 +189,48 @@ namespace TriQuest
 
 						// pick skill
 						var skillIdx = GetNumberFromKey(e.KeyCode) - 1;
-						var skillToUse = heroUsingSkill.Skills.ElementAtOrDefault(skillIdx);
+						var skillToUse = heroDoingStuff.Skills.ElementAtOrDefault(skillIdx);
 
 						if (skillToUse == null)
 						{
 							// prompt for skill to use
-							Log.Append("What skill will the " + heroUsingSkill.Name + " use? (press S again to cancel)");
+							Log.Append("What skill will the " + heroDoingStuff.Name + " use? (press S again to cancel)");
 							int skillNum = 0;
-							foreach (var skill in heroUsingSkill.Skills)
+							foreach (var skill in heroDoingStuff.Skills)
 							{
 								skillNum++;
 								Log.Append(skillNum + ": " + skill.Name + " (" + skill.ManaCost + " mana) - " + skill.Description);
 							}
 						}
-						else if (skillToUse.ManaCost > heroUsingSkill.Mana)
+						else if (skillToUse.ManaCost > heroDoingStuff.Mana)
 						{
 							// not enough mana, cancel
-							Log.Append("The " + heroUsingSkill.Name + " lacks the mana for " + skillToUse.Name + "!");
-							skillMode = false;
-							heroUsingSkill = null;
+							Log.Append("The " + heroDoingStuff.Name + " lacks the mana for " + skillToUse.Name + "!");
+							mode = ' ';
+							heroDoingStuff = null;
 							Log.Append("Never mind, then.");
 						}
 						else
 						{
 							// use skill
-							Log.Append("The " + heroUsingSkill.Name + " " + skillToUse.Verb + " " + skillToUse.Name + "!");
+							Log.Append("The " + heroDoingStuff.Name + " " + skillToUse.Verb + " " + skillToUse.Name + "!");
 							int x = map.HeroX + map.Heroes.Facing.DeltaX;
 							int y = map.HeroY + map.Heroes.Facing.DeltaY;
 							Tile target = null;
 							if (map.CoordsInBounds(x, y))
 								target = map.Tiles[x, y];
-							skillToUse.Use(heroUsingSkill, map.Heroes, target, map);
+							skillToUse.Use(heroDoingStuff, map.Heroes, target, map);
 
 							// spend mana
-							heroUsingSkill.Mana -= skillToUse.ManaCost;
+							heroDoingStuff.Mana -= skillToUse.ManaCost;
 
 							// use time
 							map.Heroes.Act(map.Tiles[map.HeroX, map.HeroY].Terrain.MovementCost);
 							map.LetMonstersAct();
 
 							// done using skill
-							skillMode = false;
-							heroUsingSkill = null;
+							mode = ' ';
+							heroDoingStuff = null;
 						}
 					}
 				}
@@ -239,16 +239,16 @@ namespace TriQuest
 					if (e.KeyCode == Keys.S)
 					{
 						// cancel
-						skillMode = false;
-						heroUsingSkill = null;
+						mode = ' ';
+						heroDoingStuff = null;
 						Log.Append("Never mind, then.");
 					}
 					else
 					{
 						// pick hero
 						var heroIdx = GetNumberFromKey(e.KeyCode) - 1;
-						heroUsingSkill = map.Heroes.CreaturePositions.Values.ElementAtOrDefault(heroIdx);
-						if (heroUsingSkill == null)
+						heroDoingStuff = map.Heroes.CreaturePositions.Values.ElementAtOrDefault(heroIdx);
+						if (heroDoingStuff == null)
 						{
 							// didn't pick a hero
 							Log.Append("Who will use a skill? (press S again to cancel)");
@@ -262,12 +262,241 @@ namespace TriQuest
 						else
 						{
 							// prompt for skill to use
-							Log.Append("What skill will the " + heroUsingSkill.Name + " use? (press S again to cancel)");
+							Log.Append("What skill will the " + heroDoingStuff.Name + " use? (press S again to cancel)");
 							int skillNum = 0;
-							foreach (var skill in heroUsingSkill.Skills)
+							foreach (var skill in heroDoingStuff.Skills)
 							{
 								skillNum++;
 								Log.Append(skillNum + ": " + skill.Name + " (" + skill.ManaCost + " mana) - " + skill.Description);
+							}
+						}
+					}
+				}
+			}
+			else if (mode == 'w')
+			{
+				if (heroDoingStuff != null)
+				{
+					if (e.KeyCode == Keys.W)
+					{
+						// cancel
+						mode = ' ';
+						heroDoingStuff = null;
+						Log.Append("Never mind, then.");
+					}
+					else
+					{
+						// pick weapon
+						var idx = GetNumberFromKey(e.KeyCode) - 1;
+						var available = Weapon.All.Where(w => w.Hero == heroDoingStuff && w.HasBeenFound);
+						var weapon = available.ElementAtOrDefault(idx);
+
+						if (weapon == null)
+						{
+							if (!available.Any())
+							{
+								// nothing to equip
+								Log.Append("The " + heroDoingStuff.Name + " doesn't have any weapons to equip!");
+								mode = ' ';
+								heroDoingStuff = null;
+							}
+							else
+							{
+								// prompt for weapon to equip
+								Log.Append("What weapon will the " + heroDoingStuff.Name + " equip? (press W again to cancel)");
+								int num = 0;
+								foreach (var w in available)
+								{
+									num++;
+									Log.Append(num + ": " + w.Name + " (" + w.Description + ")");
+								}
+							}
+						}
+						else
+						{
+							if (heroDoingStuff.Weapon == weapon)
+							{
+								// nothing to do
+								Log.Append("But the " + heroDoingStuff.Name + " has already equipped the " + weapon.Name + "!"); mode = ' ';
+								heroDoingStuff = null;
+							}
+							else
+							{
+								// equip weapon
+								Log.Append("The " + heroDoingStuff.Name + " equips the " + weapon.Name + ".");
+								heroDoingStuff.Weapon = weapon;
+
+								// use time
+								map.Heroes.Act(map.Tiles[map.HeroX, map.HeroY].Terrain.MovementCost);
+								map.LetMonstersAct();
+
+								// done equipping
+								mode = ' ';
+								heroDoingStuff = null;
+							}
+						}
+					}
+				}
+				else
+				{
+					if (e.KeyCode == Keys.W)
+					{
+						// cancel
+						mode = ' ';
+						heroDoingStuff = null;
+						Log.Append("Never mind, then.");
+					}
+					else
+					{
+						// pick hero
+						var heroIdx = GetNumberFromKey(e.KeyCode) - 1;
+						heroDoingStuff = map.Heroes.CreaturePositions.Values.ElementAtOrDefault(heroIdx);
+						if (heroDoingStuff == null)
+						{
+							// didn't pick a hero
+							Log.Append("Who will equip a weapon? (press W again to cancel)");
+							int heroNum = 0;
+							foreach (var hero in map.Heroes.CreaturePositions.Values)
+							{
+								heroNum++;
+								Log.Append(heroNum + ": " + hero.Name, hero.Color);
+							}
+						}
+						else
+						{
+							var available = Weapon.All.Where(w => w.Hero == heroDoingStuff && w.HasBeenFound);
+							if (!available.Any())
+							{
+								// nothing to equip
+								Log.Append("The " + heroDoingStuff.Name + " doesn't have any weapons to equip!");
+								mode = ' ';
+								heroDoingStuff = null;
+							}
+							else
+							{
+								// prompt for weapon to equip
+								Log.Append("What weapon will the " + heroDoingStuff.Name + " equip? (press W again to cancel)");
+								int num = 0;
+								foreach (var w in available)
+								{
+									num++;
+									Log.Append(num + ": " + w.Name + " (" + w.Description + ")");
+								}
+							}
+						}
+					}
+				}
+			}
+			else if (mode == 'a')
+			{
+				if (heroDoingStuff != null)
+				{
+					if (e.KeyCode == Keys.A)
+					{
+						// cancel
+						mode = ' ';
+						heroDoingStuff = null;
+						Log.Append("Never mind, then.");
+					}
+					else
+					{
+						// pick armor
+						var idx = GetNumberFromKey(e.KeyCode) - 1;
+						var available = Armor.All.Where(a => a.Hero == heroDoingStuff && a.HasBeenFound);
+						var armor = available.ElementAtOrDefault(idx);
+
+						if (armor == null)
+						{
+							if (!available.Any())
+							{
+								// nothing to equip
+								Log.Append("The " + heroDoingStuff.Name + " doesn't have any armor to equip!");
+								mode = ' ';
+								heroDoingStuff = null;
+							}
+							else
+							{
+								// prompt for armor to equip
+								Log.Append("What armor will the " + heroDoingStuff.Name + " equip? (press A again to cancel)");
+								int num = 0;
+								foreach (var a in available)
+								{
+									num++;
+									Log.Append(num + ": " + a.Name + " (" + a.Description + ")");
+								}
+							}
+						}
+						else
+						{
+							if (heroDoingStuff.Armor == armor)
+							{
+								// nothing to do
+								Log.Append("But the " + heroDoingStuff.Name + " has already equipped the " + armor.Name + "!");
+								mode = ' ';
+								heroDoingStuff = null;
+							}
+							else
+							{
+								// equip armor
+								Log.Append("The " + heroDoingStuff.Name + " equips the " + armor.Name + ".");
+								heroDoingStuff.Armor = armor;
+
+								// use time
+								map.Heroes.Act(map.Tiles[map.HeroX, map.HeroY].Terrain.MovementCost);
+								map.LetMonstersAct();
+
+								// done equipping
+								mode = ' ';
+								heroDoingStuff = null;
+							}
+						}
+					}
+				}
+				else
+				{
+					if (e.KeyCode == Keys.A)
+					{
+						// cancel
+						mode = ' ';
+						heroDoingStuff = null;
+						Log.Append("Never mind, then.");
+					}
+					else
+					{
+						// pick hero
+						var heroIdx = GetNumberFromKey(e.KeyCode) - 1;
+						heroDoingStuff = map.Heroes.CreaturePositions.Values.ElementAtOrDefault(heroIdx);
+						if (heroDoingStuff == null)
+						{
+							// didn't pick a hero
+							Log.Append("Who will equip armor? (press A again to cancel)");
+							int heroNum = 0;
+							foreach (var hero in map.Heroes.CreaturePositions.Values)
+							{
+								heroNum++;
+								Log.Append(heroNum + ": " + hero.Name, hero.Color);
+							}
+						}
+						else
+						{
+							var available = Armor.All.Where(a => a.Hero == heroDoingStuff && a.HasBeenFound);
+							if (!available.Any())
+							{
+								// nothing to equip
+								Log.Append("The " + heroDoingStuff.Name + " doesn't have any armor to equip!");
+								mode = ' ';
+								heroDoingStuff = null;
+							}
+							else
+							{
+								// prompt for armor to equip
+								Log.Append("What armor will the " + heroDoingStuff.Name + " equip? (press A again to cancel)");
+								int num = 0;
+								foreach (var a in available)
+								{
+									num++;
+									Log.Append(num + ": " + a.Name + " (" + a.Description + ")");
+								}
 							}
 						}
 					}
@@ -285,8 +514,32 @@ namespace TriQuest
 				else if (e.KeyCode == Keys.S)
 				{
 					// S: use skill
-					skillMode = true;
+					mode = 's';
 					Log.Append("Who will use a skill? (press S again to cancel)");
+					int heroNum = 0;
+					foreach (var hero in map.Heroes.CreaturePositions.Values)
+					{
+						heroNum++;
+						Log.Append(heroNum + ": " + hero.Name, hero.Color);
+					}
+				}
+				else if (e.KeyCode == Keys.W)
+				{
+					// W: change weapon
+					mode = 'w';
+					Log.Append("Who will change his weapon? (press W again to cancel)");
+					int heroNum = 0;
+					foreach (var hero in map.Heroes.CreaturePositions.Values)
+					{
+						heroNum++;
+						Log.Append(heroNum + ": " + hero.Name, hero.Color);
+					}
+				}
+				else if (e.KeyCode == Keys.A)
+				{
+					// W: change weapon
+					mode = 'a';
+					Log.Append("Who will change his armor? (press A again to cancel)");
 					int heroNum = 0;
 					foreach (var hero in map.Heroes.CreaturePositions.Values)
 					{
@@ -329,6 +582,7 @@ namespace TriQuest
 			picMinimap.Invalidate();
 			BindStatsBoxes(map.Heroes);
 			RefreshLog();
+
 		}
 
 		private int GetNumberFromKey(Keys key)

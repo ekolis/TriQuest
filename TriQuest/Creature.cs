@@ -128,6 +128,70 @@ namespace TriQuest
 		/// </summary>
 		public ItemType ItemDropType { get; set; }
 
+		private Weapon weapon;
+
+		/// <summary>
+		/// The weapon that this creature has equipped.
+		/// </summary>
+		public Weapon Weapon
+		{
+			get { return weapon; }
+			set
+			{
+				if (weapon != null)
+				{
+					Attack -= weapon.Attack;
+					Defense -= weapon.Defense;
+					Body -= weapon.Body;
+					Mind -= weapon.Mind;
+					Speed -= weapon.Speed;
+					Sight -= weapon.Sight;
+				}
+				weapon = value;
+				if (weapon != null)
+				{
+					Attack += weapon.Attack;
+					Defense += weapon.Defense;
+					Body += weapon.Body;
+					Mind += weapon.Mind;
+					Speed += weapon.Speed;
+					Sight += weapon.Sight;
+				}
+			}
+		}
+
+		private Armor armor;
+
+		/// <summary>
+		/// The armor that this creature has equipped.
+		/// </summary>
+		public Armor Armor
+		{
+			get { return armor; }
+			set
+			{
+				if (armor != null)
+				{
+					Attack -= armor.Attack;
+					Defense -= armor.Defense;
+					Body -= armor.Body;
+					Mind -= armor.Mind;
+					Speed -= armor.Speed;
+					Sight -= armor.Sight;
+				}
+				armor = value;
+				if (armor != null)
+				{
+					Attack += armor.Attack;
+					Defense += armor.Defense;
+					Body += armor.Body;
+					Mind += armor.Mind;
+					Speed += armor.Speed;
+					Sight += armor.Sight;
+				}
+			}
+		}
+
 		public Creature Clone()
 		{
 			var c = new Creature();
@@ -150,6 +214,8 @@ namespace TriQuest
 			c.BerserkTimer = BerserkTimer;
 			c.IsBerserk = IsBerserk;
 			c.HasBeenSlowed = HasBeenSlowed;
+			c.Weapon = Weapon;
+			c.Armor = Armor;
 			return c;
 		}
 
