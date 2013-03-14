@@ -138,7 +138,7 @@ namespace TriQuest
 		public override void Found(Formation heroes)
 		{
 			HasBeenFound = true;
-			Log.Append("The party finds a " + Name + ".");
+			Log.Append("The party finds a " + Name + ".", Color.Cyan);
 		}
 	}
 
@@ -390,7 +390,7 @@ namespace TriQuest
 
 		public override void Found(Formation heroes)
 		{
-			Log.Append("The party finds a " + Name + ".");
+			Log.Append("The party finds a " + Name + ".", Color.Cyan);
 			Action(heroes);
 		}
 
