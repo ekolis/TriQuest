@@ -195,5 +195,217 @@ namespace TriQuest
 		/// Has this creature been slowed already? If so, it's immune to further slowing.
 		/// </summary>
 		public bool HasBeenSlowed { get; set; }
+
+		public static readonly Creature Warrior = new Creature
+			{
+				Name = "warrior",
+				Attack = 7,
+				Defense = 6,
+				Mind = 1,
+				Body = 6,
+				Speed = 5,
+				Symbol = '@',
+				Color = Color.Red,
+				Level = 1,
+				Sight = 5,
+				PhysicalAttackText = "slashes",
+				PhysicalAttackRange = 1,
+				MentalAttackText = "ki-blasts",
+				MentalAttackRange = 2,
+			};
+
+		public static readonly Creature Mage = new Creature
+			{
+				Name = "mage",
+				Attack = 6,
+				Defense = 2,
+				Mind = 10,
+				Body = 2,
+				Speed = 5,
+				Symbol = '@',
+				Color = Color.Blue,
+				Level = 1,
+				Sight = 5,
+				PhysicalAttackText = "bashes",
+				PhysicalAttackRange = 2,
+				MentalAttackText = "casts a magic missile at",
+				MentalAttackRange = 3,
+			};
+
+		public static readonly Creature Priest = new Creature
+			{
+				Name = "priest",
+				Attack = 5,
+				Defense = 4,
+				Mind = 7,
+				Body = 4,
+				Speed = 5,
+				Symbol = '@',
+				Color = Color.Green,
+				Level = 1,
+				Sight = 5,
+				PhysicalAttackText = "smites",
+				PhysicalAttackRange = 1,
+				MentalAttackText = "casts Cause Wounds at",
+				MentalAttackRange = 3,
+			};
+
+		static Creature()
+		{
+			Warrior.Skills.Add(new Skill
+			{
+				Name = "Berserk",
+				Verb = "goes",
+				Description = "Temporarily increases attack and body at the expense of defense and mind.",
+				ManaCost = 10,
+				Use = (user, us, target, map) =>
+				{
+					user.StartBerserk(10);
+					Log.Append("RAAAAR! Warrior SMASH!");
+				},
+			});
+			Warrior.Skills.Add(new Skill
+			{
+
+				Name = "Omnislash",
+				Verb = "uses",
+				Description = "Hits all enemies in the tile directly ahead with a physical attack.",
+				ManaCost = 20,
+				Use = (user, us, target, map) =>
+					{
+						if (target == null || target.Formation == null)
+							Log.Append("But there's no one ahead to slash!");
+						else
+						{
+							foreach (var defender in target.Formation.CreaturePositions.Values)
+							{
+								var atkRoll = Dice.Roll(user.Attack, user.Body);
+								var defRoll = Dice.Roll(user.Defense, defender.Body);
+								var damage = Math.Max(0, atkRoll - defRoll);
+								var msg = "Hits the " + defender.Name + " (" + user.Attack + "d" + user.Body + " vs. " + defender.Defense + "d" + defender.Body + ") for " + damage + " damage.";
+								defender.Health -= damage;
+								if (defender.Health <= 0)
+								{
+									msg += " The " + defender.Name + " is slain!";
+									foreach (var p in RelativePosition.All)
+									{
+										if (target.Formation.CreaturePositions.ContainsKey(p) && target.Formation.CreaturePositions[p] == defender)
+											target.Formation.CreaturePositions.Remove(p); // he's dead, Jim...
+									}
+									if (!target.Formation.CreaturePositions.Any())
+										target.Formation = null; // they're all dead, Dave...
+								}
+								Log.Append(msg);
+							}
+						}
+					},
+			});
+
+
+
+			Mage.Skills.Add(new Skill
+			{
+				Name = "Fireball",
+				Verb = "casts",
+				Description = "Hits all enemies in the tile directly ahead with a magical attack.",
+				ManaCost = 10,
+				Use = (user, us, target, map) =>
+				{
+					if (target == null || target.Formation == null)
+						Log.Append("But there's no one ahead to blast!");
+					else
+					{
+						foreach (var defender in target.Formation.CreaturePositions.Values)
+						{
+							var atkRoll = Dice.Roll(user.Attack, user.Mind);
+							var defRoll = Dice.Roll(user.Defense, defender.Mind);
+							var damage = Math.Max(0, atkRoll - defRoll);
+							var msg = "Hits the " + defender.Name + " (" + user.Attack + "d" + user.Body + " vs. " + defender.Defense + "d" + defender.Body + ") for " + damage + " damage.";
+							defender.Health -= damage;
+							if (defender.Health <= 0)
+							{
+								msg += " The " + defender.Name + " is slain!";
+								foreach (var p in RelativePosition.All)
+								{
+									if (target.Formation.CreaturePositions.ContainsKey(p) && target.Formation.CreaturePositions[p] == defender)
+										target.Formation.CreaturePositions.Remove(p); // he's dead, Jim...
+								}
+								if (!target.Formation.CreaturePositions.Any())
+									target.Formation = null; // they're all dead, Dave...
+							}
+							Log.Append(msg);
+						}
+					}
+				},
+			});
+			Mage.Skills.Add(new Skill
+			{
+				Name = "Slow",
+				Verb = "casts",
+				Description = "Reduces the speed of a group of enemies. Not cumulative over multiple casts.",
+				ManaCost = 20,
+				Use = (user, us, target, map) =>
+				{
+					if (target == null || target.Formation == null)
+						Log.Append("But there's no one ahead to slow!");
+					else
+					{
+						foreach (var defender in target.Formation.CreaturePositions.Values)
+						{
+							if (!defender.HasBeenSlowed)
+							{
+								defender.Speed /= 2;
+								Log.Append("The " + defender.Name + " seems more sluggish.");
+								defender.HasBeenSlowed = true;
+							}
+							else
+								Log.Append("The " + defender.Name + " is already slow.");
+						}
+					}
+				},
+			});
+
+			Priest.Skills.Add(new Skill
+			{
+				Name = "Heal Wounds",
+				Verb = "casts",
+				Description = "Heals some of the HP of the party. Tougher party members are easier to heal.",
+				ManaCost = 10,
+				Use = (user, us, target, map) =>
+				{
+					foreach (var hero in us.CreaturePositions.Values)
+					{
+						var healing = Dice.Roll(user.Mind, hero.Body);
+						var msg = "Heals the " + hero.Name + " (" + user.Mind + "d" + hero.Body + ") for " + healing + " HP.";
+						hero.Health += healing;
+						if (hero.Health > Creature.MaxHealth)
+						{
+							hero.Health = Creature.MaxHealth;
+						}
+						Log.Append(msg);
+					}
+
+				},
+			});
+			Priest.Skills.Add(new Skill
+			{
+				Name = "Banish",
+				Verb = "casts",
+				Description = "Teleports a group of enemies to a random location.",
+				ManaCost = 20,
+				Use = (user, us, target, map) =>
+				{
+					if (target == null || target.Formation == null)
+						Log.Append("But there's no one ahead to banish!");
+					else
+					{
+						var locations = map.Tiles.Cast<Tile>().Where(t => t.Formation == null);
+						locations.Pick().Formation = target.Formation;
+						target.Formation = null;
+						Log.Append("The enemy disappear in a white flash!");
+					}
+				},
+			});
+		}
 	}
 }

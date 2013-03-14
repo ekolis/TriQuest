@@ -49,6 +49,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Formation.cs" />
     <Compile Include="ICloneable.cs" />
+    <Compile Include="Item.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
