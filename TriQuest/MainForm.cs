@@ -119,6 +119,8 @@ namespace TriQuest
 						DrawTileSimpleFogged(map.Tiles[x, y], g, font, x * charSize, y * charSize);
 				}
 			}
+			var pen = new Pen(Color.White);
+			g.DrawRectangle(pen, (map.HeroX - map.Heroes.Sight) * charSize, (map.HeroY - map.Heroes.Sight) * charSize, map.Heroes.Sight * 2 * charSize, map.Heroes.Sight * 2 * charSize);
 		}
 
 		private int heroBeingPlaced = -1;
