@@ -1,0 +1,430 @@
+﻿<html>
+	<head>
+		<title>TriQuest</title>
+		<style type="text/css">
+			pre
+			{
+				background: black;
+				color: white;
+				font-size: larger;
+			}
+			
+			th
+			{
+				font-weight: bold;
+			}
+			
+			table, td, th
+			{
+				border: solid 1px black;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>TriQuest</h1>
+		<h2>Ed Kolis' entry into the <a href="http://roguebasin.roguelikedevelopment.org/index.php?title=7DRL_Challenge_2013">7DRL Challenge 2013</a></h2>
+		<ul style="font-size: larger">
+			<li><a href="#Overview">Overview</a></li>
+			<li><a href="#GameMechanics">Game Mechanics</a></li>
+			<li><a href="#Controls">Controls</a></li>
+			<li><a href="#Terrain">Terrain</a></li>
+			<li><a href="#Heroes">Heroes</a></li>
+			<li><a href="#Items">Items</a></li>
+			<li><a href="#Bestiary">Bestiary</a></li>
+		</ul>
+		
+		<h2 id="Overview">Overview</h2>
+		 <p>TriQuest is a roguelike game in which the goal is for your party of adventurers to defeat the Chaos Lord.
+		Features distinguishing it from other roguelikes include the formation system (in which multiple heroes/monsters are located in a single tile)
+		the gradient-based overworld terrain map (as opposed to the dungeon maps of most other roguelikes), and a simplified inventory system.</p>
+		
+		<h2 id="GameMechanics">Game Mechanics</h2>
+		<h3>Subtiles and Formations</h3>
+			<p>Each tile on the map in TriQuest is divided into nine "subtiles", arranged in a 3x3 grid.
+			Heroes and monsters are arranged into formations, with each creature occupying a single subtile.
+			No more than one creature may occupy a single subtile.
+			Formations also have a facing; when the formation rotates, the creatures shift within the tile to new subtiles to match the formation's new facing.</p>
+		<h3>Overworld Map</h3>
+			<p>When the map is generated, a number of "hotspots" are placed. Hotspots are locations where dangerous monsters will be found.
+			The most dangerous hotspot will contain the Chaos Lord, so be careful!
+			Surrounding the hotspots will be "danger zones", with the danger level decreasing the further you get from the hotspot.
+			You can get clued in on whether the danger is increasing or decreasing as you travel by keeping an eye on the monsters and terrain, as both vary with the danger level.</p>
+		<h3>Items</h3>
+			<p>There are three types of items: weapons, armor, and consumables.</p>
+			<p>Weapons and armor are fairly similar; each hero can equip one of each, and each is specific to a particular hero.
+			Weapons and armor modify the heroes' stats, with weapons tending to increase attack and armor tending to increase defense.
+			The party need not carry duplicate items, so the inventory system is simplified from most other roguelikes:
+			finding a particular weapon or armor for the first time simply sets a flag that it's been found, and from then on, you can choose to equip it.</p>
+			<p>Consumables consist of health and mana potions, each of which comes in two flavors:
+			a "pack of small potions" (restores some HP or MP to all heroes), and a "large potion" (restores a lot of HP or MP to the hero with the least remaining).
+			Potions are used immediately upon being found, so if you want to save a potion for later because your HP or MP are full, you'll have to avoid stepping over it.</p>
+			<p>Items are designed so that no particular item is intrinsically better than another; each has its advantages and disadvantages.</p>
+		<h3>Combat</h3>
+			<p>When two formations engage in combat (e.g. the heroes and a group of monsters), each creature in the attacking formation first chooses a target.
+			This is done automatically; the creature chooses the target that is nearest to him.
+			Next, the attacker chooses an attack type: physical or mental.
+			If the difference between the Mind stats of attacker and target is greater then the difference between their Body stats, the attacker will choose a mental attack;
+			otherwise he will choose a physical attack.</p>
+			<p>To resolve the attack, the attacker rolls AdX, where A is the attacker's Attack stat, and X is the attacker's Body or Mind stat, depending on the type of attack.
+			The defender rolls DdX, where D is the defender's Defense stat, and X is the defender's Body or Mind stat, depending on the type of attack.
+			The damage inflicted then is equal to the difference between the two rolls, or zero if the attack roll is less than the defense roll.</p>
+			<p>However, if the distance between the attacker and the defender is greater than the range of the attacker, then the attacker must roll 1d3 for each extra subtile of distance.
+			If any of the rolls come up 1, then the attack misses and does no damage.</p>
+			
+		<h2 id="Controls">Controls</h2>
+		<table>
+			<tr>
+				<th>Key</th>
+				<th>Action</th>
+			</tr>
+			<tr>
+				<td>Arrows/numpad/numbers</td>
+				<td>Move and attack (not diagonally). Strafe-move with shift. (Without shift, the heroes will rotate instead of move if you press a direction they are not already facing.)</td>
+			</tr>
+			<tr>
+				<td>F</td>
+				<td>Change formation. You will be prompted for where to place each hero in turn. Use the numpad or numbers to do so, or press F again to cancel.</td>
+			</tr>
+			<tr>
+				<td>S</td>
+				<td>Use skill. You will be prompted for which hero and which skill. Press S again to cancel.</td>
+			</tr>
+			<tr>
+				<td>W</td>
+				<td>Equip weapons. You will be prompted for which hero and which weapon. Press W again to cancel.</td>
+			</tr>
+			<tr>
+				<td>A</td>
+				<td>Equip armor. You will be prompted for which hero and which armor. Press A again to cancel.</td>
+			</tr>
+		</table>
+		
+		<h2 id="Terrain">Terrain</h2>
+		<table>
+			<tr>
+				<th>Symbol</th>
+				<th>Name</th>
+				<th>Movement Cost</th>
+				<th>Danger Levels</th>
+			</tr>
+			<tr>
+				<td><pre style="color: green">.</pre></td>
+				<td>Grass</td>
+				<td>1</td>
+				<td>0-6</td>
+			</tr>
+			<tr>
+				<td><pre style="color: green">#</pre></td>
+				<td>Forest</td>
+				<td>2</td>
+				<td>1-3</td>
+			</tr>
+			<tr>
+				<td><pre style="color: gray">*</pre></td>
+				<td>Rocks</td>
+				<td>2</td>
+				<td>4-9</td>
+			</tr>
+			<tr>
+				<td><pre style="color: beige">.</pre></td>
+				<td>Desert</td>
+				<td>1</td>
+				<td>4-6</td>
+			</tr>
+			<tr>
+				<td><pre style="color: blue">~</pre></td>
+				<td>Water</td>
+				<td>3</td>
+				<td>1-6</td>
+			</tr>
+			<tr>
+				<td><pre style="color: gray">+</pre></td>
+				<td>Wasteland</td>
+				<td>1</td>
+				<td>7-10</td>
+			</tr>
+		</table>
+		
+		<h2 id="Heroes">Heroes</h2>
+		<table>
+			<tr>
+				<th>Symbol</th>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Skill 1</th>
+				<th>Skill 2</th>
+			</tr>
+			<tr>
+				<td><pre style="color: red">@</pre></td>
+				<td>Warrior</td>
+				<td>Strong on physical attack and defense, but vulnerable to magic.</td>
+				<td>Berserk - Temporarily increases attack at expense of defense</td>
+				<td>Omnislash - Hits multiple enemies with a single attack</td>
+			</tr>
+			<tr>
+				<td><pre style="color: blue">@</pre></td>
+				<td>Mage</td>
+				<td>Strong on magical attack and defense, but vulnerable to brute force.</td>
+				<td>Fireball - Hits multiple enemies with a single attack</td>
+				<td>Slow - Permanently slows a group of enemies. Only works once per target.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: green">@</pre></td>
+				<td>Priest</td>
+				<td>Average stats. Some of his weapons are a bit unusual...</td>
+				<td>Cure Wounds - Restores HP of party members</td>
+				<td>Banish - Teleports a group of enemies to a random location.</td>
+			</tr>
+		</table>
+		
+		<h2 id="Items">Items</h2>
+		<h3>Weapons</h3>
+		<table>
+			<tr>
+				<th>Symbol</th>
+				<th>Name</th>
+				<th>User</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><pre style="color: silver">/</pre></td>
+				<td>Shortsword</td>
+				<td>Warrior</td>
+				<td>Increases attack somewhat.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: silver">\</pre></td>
+				<td>Longsword</td>
+				<td>Warrior</td>
+				<td>Increases attack significantly, but decreases defense a little.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: silver">|</pre></td>
+				<td>Greatsword</td>
+				<td>Warrior</td>
+				<td>Increases attack a lot, but decreases defense somewhat.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: silver">{</pre></td>
+				<td>Battle-axe</td>
+				<td>Warrior</td>
+				<td>Increases attack drastically, but decreases defense significantly.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: red">/</pre></td>
+				<td>Fire Rod</td>
+				<td>Mage</td>
+				<td>Increases attack and mind.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: cyan">/</pre></td>
+				<td>Ice Rod</td>
+				<td>Mage</td>
+				<td>Increases defense and mind.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: yellow">/</pre></td>
+				<td>Lightning Rod</td>
+				<td>Mage</td>
+				<td>Increases sight and mind.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: white">/</pre></td>
+				<td>Tempest Rod</td>
+				<td>Mage</td>
+				<td>Increases attack, defense, and sight.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: darkgray">\</pre></td>
+				<td>Mace</td>
+				<td>Priest</td>
+				<td>Increases attack significantly.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: brown">\</pre></td>
+				<td>Bo Staff</td>
+				<td>Priest</td>
+				<td>Increases attack and defense.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: yellow">0</pre></td>
+				<td>Talisman</td>
+				<td>Priest</td>
+				<td>Increases body and mind.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: cyan">=</pre></td>
+				<td>Diviner's Ring</td>
+				<td>Priest</td>
+				<td>Increases sight dramatically.</td>
+			</tr>
+		</table>
+		
+		<h3>Armor</h3>
+		<table>
+			<tr>
+				<th>Symbol</th>
+				<th>Name</th>
+				<th>User</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><pre style="color: lightgray">#</pre></td>
+				<td>Chainmail</td>
+				<td>Warrior</td>
+				<td>Increases defense.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: silver">#</pre></td>
+				<td>Platemail</td>
+				<td>Warrior</td>
+				<td>Increases defense significantly, but decreases body slightly.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: cyan">#</pre></td>
+				<td>Crystal Armor</td>
+				<td>Warrior</td>
+				<td>Increases defense drastically, but decreases body somewhat.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: blue">#</pre></td>
+				<td>Wizard's Robe</td>
+				<td>Mage</td>
+				<td>Increases defense and mind somewhat.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: gray">#</pre></td>
+				<td>Robe of Protection</td>
+				<td>Mage</td>
+				<td>Increases defense significantly.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: red">#</pre></td>
+				<td>Robe of Wild Magic</td>
+				<td>Mage</td>
+				<td><em>Decreases</em> defense slightly, but increases attack and mind.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: darkgray">#</pre></td>
+				<td>Cassock</td>
+				<td>Priest</td>
+				<td>Increases defense and body somewhat.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: brown">#</pre></td>
+				<td>Monk's Robe</td>
+				<td>Priest</td>
+				<td>Increases body, defense, and mind somewhat, but decreases attack.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: beige">#</pre></td>
+				<td>Leather Cuirass</td>
+				<td>Priest</td>
+				<td>Increases defense.</td>
+			</tr>
+		</table>
+		
+		<h3>Consumables</h3>
+		<table>
+			<tr>
+				<th>Symbol</th>
+				<th>Name</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><pre style="color: red">%</pre></td>
+				<td>Pack of Small Health Potions</td>
+				<td>Restores 20 HP to all heroes.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: red">!</pre></td>
+				<td>Large Health Potion</td>
+				<td>Restores 60 HP to the most wounded hero.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: blue">%</pre></td>
+				<td>Pack of Small Mana Potions</td>
+				<td>Restores 20 MP to all heroes.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: blue">!</pre></td>
+				<td>Large Mana Potion</td>
+				<td>Restores 60 MP to the most depleted hero.</td>
+			</tr>
+		<table>
+		
+		<h2 id="Bestiary">Bestiary</h2>
+		<table>
+			<tr>
+				<th>Symbol</th>
+				<th>Name</th>
+				<th>Danger Level</th>
+				<th>Item Drops</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><pre style="color: brown">r</pre></td>
+				<td>Rat</td>
+				<td>1-3</td>
+				<td>10%, consumables</td>
+				<td>Weak enemy. You can mop the floor with them.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: gray">w</pre></td>
+				<td>Wolf</td>
+				<td>2-4</td>
+				<td>20%, consumables</td>
+				<td>Not as weak as a rat, but not much of a challenge, either.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: green">g</pre></td>
+				<td>Goblin</td>
+				<td>3-5</td>
+				<td>30%, armor</td>
+				<td>A gang of these might pose a threat. Weak to magic.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: red">o</pre></td>
+				<td>Orc Brute</td>
+				<td>4-6</td>
+				<td>40%, weapons</td>
+				<td>Somewhat dangerous, but weak to magic like their smaller kin the goblins.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: green">o</pre></td>
+				<td>Orc Shaman</td>
+				<td>5-7</td>
+				<td>40%, consumables</td>
+				<td>These orcs have learned to use magic. Watch out!</td>
+			</tr>
+			<tr>
+				<td><pre style="color: gray">G</pre></td>
+				<td>Golem</td>
+				<td>6-8</td>
+				<td>50%, armor</td>
+				<td>Golem SMASH! They're really tough, but fortunately they're slow, and magic attacks are super effective.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: purple">s</pre></td>
+				<td>Dark Sage</td>
+				<td>7-9</td>
+				<td>50%, consumables</td>
+				<td>These sages are masters of unholy magic, but they're vulnerable to physical attacks.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: magenta">x</pre></td>
+				<td>Chaos Disciple</td>
+				<td>8-10</td>
+				<td>50%, weapons</td>
+				<td>These devoted followers of the Chaos Lord go all-out on attack, but pay little attention to defending themselves.</td>
+			</tr>
+			<tr>
+				<td><pre style="color: magenta">X</pre></td>
+				<td>Chaos Lord</td>
+				<td>10</td>
+				<td>None</td>
+				<td>The final boss of the game. He is a formidable foe! It will take all three heroes working together, with good weapons and armor, to defeat him...</td>
+			</tr>
+		</table>
+	</body>
+</html>
