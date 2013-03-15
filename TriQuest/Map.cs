@@ -117,7 +117,14 @@ namespace TriQuest
 					break;
 			}
 
-			// TODO - update fog of war
+			for (var x = 0; x < Width; x++)
+			{
+				for (var y = 0; y < Height; y++)
+				{
+					if (TestLineOfSight(HeroX, HeroY, x, y))
+						Tiles[x, y].HasBeenSeen = true;
+				}
+			}
 		}
 
 		private void PlaceMonsters()
@@ -172,6 +179,17 @@ namespace TriQuest
 						foreach (var item in targetTile.Items.Values)
 							item.Found(Heroes);
 						targetTile.Items.Clear();
+
+						// update fog of war
+						for (var x = 0; x < Width; x++)
+						{
+							for (var y = 0; y < Height; y++)
+							{
+								if (TestLineOfSight(HeroX, HeroY, x, y))
+									Tiles[x, y].HasBeenSeen = true;
+							}
+						}
+
 					}
 				}
 				else
