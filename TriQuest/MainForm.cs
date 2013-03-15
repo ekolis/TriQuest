@@ -126,6 +126,8 @@ namespace TriQuest
 		private Creature heroDoingStuff = null;
 		private Dictionary<AbsolutePosition, Creature> newHeroPositions;
 		private bool heroesDead = false;
+		private bool winner = false;
+		private bool omnicide = false;
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -578,6 +580,24 @@ namespace TriQuest
 					}
 				}
 			}
+
+			// see if final boss is dead
+			if (!winner && !map.Tiles.Cast<Tile>().Any(t => t.Formation != null && t.Formation.CreaturePositions.Values.Any(c => c.Name == MonsterTemplate.ChaosLord.Archetype.Name)))
+			{
+				Log.Append("Congratulations! The Chaos Lord has been vanquished! The brave heroes can now retire to a life of fame... or they can continue slaying the foul minions that still plague the land!", Color.Magenta);
+				winner = true;
+				Text = "TriQuest - *WINNER*";
+			}
+
+			// see if all monsters are dead
+			if (map.Tiles.Cast<Tile>().All(t => t.Formation == null || t.Formation == map.Heroes))
+			{
+				Log.Append("Wow! You're really dedicated! You actually managed to slay every last monster! Double congratulations!!! Now go take a well-deserved rest!", Color.Magenta);
+				omnicide = true;
+				Text = "TriQuest - +*OMNICIDE*+";
+			}
+
+			// refresh screen
 			picMap.Invalidate();
 			picMinimap.Invalidate();
 			BindStatsBoxes(map.Heroes);
